@@ -181,7 +181,7 @@ xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["Sba",Bold,Black,lgdfontsize]
 pltlgdxyz100={Style["suppressed x",Black,lgdfontsize],Style["suppressed y",Black,lgdfontsize],Style["suppressed z",Black,lgdfontsize], Style["free space y-z",Black,lgdfontsize], Style["free space x",Black,lgdfontsize]};
 (*line style spec*)
 xyzlinestyle = {Directive[Red, Thick, Dashing[None]], Directive[Green, Thick, Dashing[None]],Directive[Blue, Thick, Dashing[None]],
-Directive[Red, Thick, Dashed], Directive[Green, Thick, Dashed],Directive[Blue, Thick, Dashed],Directive[Orange, Thick, Dashing[None]], Directive[Purple, Thick, Dashing[None]]};
+Directive[Black, Thick, Dashed], Directive[Black, Thick, Dashed],Directive[Blue, Thick, Dashed],Directive[Orange, Thick, Dashing[None]], Directive[Purple, Thick, Dashing[None]]};
 (*plotting*)
 Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], Sba[\[Pi]/2,0,0]/Sba[\[Pi]/2,0,0], Sba[\[Pi]/2,\[Pi]/2,0]/Sba[\[Pi]/2,0,0]},{x,0,1},
 	PlotLegend->pltlgdxyz100,
