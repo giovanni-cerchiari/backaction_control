@@ -188,3 +188,18 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+
+
+q1[L0_,R0_,\[Theta]0_]:={0,R0*Sin[\[Theta]0],L0+R0*Cos[\[Theta]0]};
+F[\[Theta]_,\[Phi]_,L0_,R0_,\[Theta]0_]:=2*k*(nr[\[Theta],\[Phi]].(q1[L0,R0,\[Theta]0]+a*q1[L0,-R0,\[Theta]0]))
+MatrixForm[q1[L0,R0,\[Theta]0]]
+MatrixForm[q1[L0,R0,\[Theta]0]+a*q1[L0,-R0,\[Theta]0]]
+F[\[Theta],\[Phi],L0,R0,\[Theta]0]
+dp = Integrate[Integrate[F[\[Theta],\[Phi],L0,R0,\[Theta]0],{\[Theta],0,\[Theta]D}],{\[Phi],0,2*\[Pi]}]
+Plot[Abs[F[\[Theta],\[Phi],L0,R0,\[Theta]0]]^2,{}]
+
+
+
+
+
+
