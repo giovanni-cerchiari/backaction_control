@@ -191,7 +191,7 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 
 
 (* ::InheritFromParent:: *)
-(*/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}*)
+(**)
 
 
 (* --------------------------------------------*)
@@ -202,33 +202,23 @@ F. Tebbenjohanns, A. Militaru, A. Norrman, F. van der Laan, L. Novotny and M. Fr
 Phys. Rev. A 105, 053504 (2022), doi:10.1103/PhysRevA.100.043821
 ----
 *)
-dipole[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_]:= \[Alpha]0*E0*{1,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]};
-ux[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{nr[\[Theta],\[Phi]][[1]],0,0};
-uy[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{0, nr[\[Theta],\[Phi]][[2]], 0};
-uz[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{0,0,nr[\[Theta],\[Phi]][[3]]};
-(*checking orthogonality condition*)
-uiuj[ui_,uj_,\[Theta]_,\[Phi]_]:= Integrate[Integrate[ui[\[Theta],\[Phi]].uj[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uxuy = Integrate[Integrate[ux[\[Theta],\[Phi]].uy[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uxuz = Integrate[Integrate[ux[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uyuy = Integrate[Integrate[uy[\[Theta],\[Phi]].uy[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uyuz = Integrate[Integrate[uy[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uzuz = Integrate[Integrate[uz[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-Print["check ortoghonality conditions"]
-Print["ux.ux = ", uiuj[ux,ux,\[Theta],\[Phi]], "   ux.uy = ", uiuj[ux,uy,\[Theta],\[Phi]],  "   ux.uz = ", uiuj[ux,uz,\[Theta],\[Phi]]]
-Print["uy.uy = ", uiuj[uy,uy,\[Theta],\[Phi]], "   uy.uz = ", uiuj[uy,uz,\[Theta],\[Phi]]]
-Print["uz.uz = ", uiuj[uz,uz,\[Theta],\[Phi]]]
-(*Green's tensor*)
-Gt[\[Theta]_,\[Phi]_]:=Sqrt[8*\[Pi]/3]*{ux[\[Theta],\[Phi]], uy[\[Theta],\[Phi]],uz[\[Theta],\[Phi]]};
-Print["Green's tensor = ", MatrixForm[Gt[\[Theta],\[Phi]]]]
-(*Scattered electric field*)
-Esc[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:=(\[Omega]0^2/(4*\[Pi]*\[Epsilon]0*c^2))*Exp[((I*2*\[Pi])/\[Lambda])*r]*Gt[\[Theta],\[Phi]].dipole[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
-(*Scattered intensity*)
-Intensity[\[Theta]D_]:=Evaluate[Integrate[Integrate[(\[Epsilon]0*c/2)*Conjugate[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]].Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],0,\[Theta]D}, Assumptions->{\[Theta]D>0}]];
-(*Integrated scattered power. The integral is doubled to consider the regions 0<\[Theta]<\[Theta]D and \[Pi]-\[Theta]D<\[Theta]<\[Pi] simultanously. Allowed values of \[Theta]D are in the interval [0,\[Pi]/2]*)
-P0[\[Theta]D_]:= Simplify[2*Intensity[\[Theta]D],Assumptions->{c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0}];
-Print["Total power free space (\[CapitalDelta]\[Delta]\[Rule]0,\[CapitalDelta]\[Epsilon]\[Rule]0). P0[\[Pi]/2] = ",P0[\[Pi]/2]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}]
-Print["Total power in presence of the hemipherical mirror (\[CapitalDelta]\[Delta]\[Rule]0,\[CapitalDelta]\[Epsilon]\[Rule]0). P0[\[Theta]D] = ",P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}]
-Simplify[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]/Sqrt[P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}],Assumptions->{c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0}]
+Subscript[n, \[Theta]][\[Theta]_,\[Phi]_]:={Cos[\[Theta]]*Cos[\[Phi]],Cos[\[Theta]]*Sin[\[Phi]], -Sin[\[Theta]]};
+Subscript[n, \[Phi]][\[Phi]_]:={-Sin[\[Phi]],Cos[\[Phi]],0};
+
+p[\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_]:={1,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]}*Subscript[\[Alpha], 0]*Subscript[E, 0];
+
+Subscript[u, i][\[Theta]_,\[Phi]_,i_]:=Sqrt[3/(8 \[Pi])]*(Subscript[n, \[Theta]][\[Theta],\[Phi]][[i]]*Subscript[n, \[Theta]][\[Theta],\[Phi]] + Subscript[n, \[Phi]][\[Phi]][[i]]*Subscript[n, \[Phi]][\[Phi]] );
+U[\[Theta]_,\[Phi]_]:={Subscript[u, i][\[Theta],\[Phi],1],Subscript[u, i][\[Theta],\[Phi],2],Subscript[u, i][\[Theta],\[Phi],3]};
+
+u[i_,j_]:=Integrate[Integrate[U[\[Theta],\[Phi]][[i]].U[\[Theta],\[Phi]][[j]]*Sin[\[Theta]], {\[Theta],0,\[Pi]}], {\[Phi],0,2*\[Pi]}];
+
+G[\[Theta]_,\[Phi]_]:=Sqrt[(8 \[Pi])/3]*U[\[Theta],\[Phi]];
+Subscript[E, sc][r_,\[Theta]_,\[Phi]_]:=Subscript[\[Omega], 0]^2/(Subscript[\[Epsilon], 0]*c^2)*Exp[i k r]/(4 \[Pi] r) * G[\[Theta],\[Phi]].p[\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
+Subscript[E, lo][r_,\[Theta]_,\[Phi]_]:=-\[Rho] Exp[-I 2 Subscript[R, s]]*Subscript[E, sc][r,\[Theta],\[Phi]];
+
+Subscript[I, tot][r_,\[Theta]_,\[Phi]_]:=Norm[Subscript[E, sc][r,\[Theta],\[Phi]]+Subscript[E, lo][r,\[Theta],\[Phi]]]^2;
+
+Print[Simplify[Subscript[I, tot][r,\[Theta],\[Phi]], Assumptions->{Subscript[R, s]>0,0<=\[Theta]<=\[Pi]/2,0<=\[Phi]<=\[Pi]}]];
 
 
 
