@@ -213,16 +213,14 @@ U[\[Theta]_,\[Phi]_]:={Subscript[u, i][\[Theta],\[Phi],1],Subscript[u, i][\[Thet
 u[i_,j_]:=Integrate[Integrate[U[\[Theta],\[Phi]][[i]].U[\[Theta],\[Phi]][[j]]*Sin[\[Theta]], {\[Theta],0,\[Pi]}], {\[Phi],0,2*\[Pi]}];
 
 G[\[Theta]_,\[Phi]_]:=Sqrt[(8 \[Pi])/3]*U[\[Theta],\[Phi]];
-Subscript[E, sc][r_,\[Theta]_,\[Phi]_]:=Subscript[\[Omega], 0]^2/(Subscript[\[Epsilon], 0]*c^2)*Exp[i k r]/(4 \[Pi] r) * G[\[Theta],\[Phi]].p[\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
+Subscript[E, sc][r_,\[Theta]_,\[Phi]_]:=Subscript[\[Omega], 0]^2/(Subscript[\[Epsilon], 0]*c^2)*Exp[I k r]/(4 \[Pi] r) * Hold[G[\[Theta],\[Phi]].p[\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]]];
 Subscript[E, lo][r_,\[Theta]_,\[Phi]_]:=-\[Rho] Exp[-I 2 Subscript[R, s]]*Subscript[E, sc][r,\[Theta],\[Phi]];
 
-Subscript[I, tot][r_,\[Theta]_,\[Phi]_]:=Norm[Subscript[E, sc][r,\[Theta],\[Phi]]+Subscript[E, lo][r,\[Theta],\[Phi]]]^2;
+Subscript[I, tot][r_,\[Theta]_,\[Phi]_]:=Simplify[Norm[ReleaseHold[Subscript[E, sc][r,\[Theta],\[Phi]]]+ReleaseHold[Subscript[E, lo][r,\[Theta],\[Phi]]]]^2, Assumptions->{0<=\[Theta]<=\[Pi]/2,0<=\[Phi]<=\[Pi],Subscript[R, s]>0,Subscript[R, s]\[Element]Reals,k\[Element]Reals,r>0,r\[Element]Reals,\[Rho]>0,\[Rho]\[Element]Reals}];
 
-Print[Simplify[Subscript[I, tot][r,\[Theta],\[Phi]], Assumptions->{Subscript[R, s]>0,0<=\[Theta]<=\[Pi]/2,0<=\[Phi]<=\[Pi]}]];
+Subscript[P, det][NA_]:=Evaluate[Integrate[Integrate[Subscript[I, tot][r,\[Theta],\[Phi]], {\[Theta],0,NA}], {\[Phi],0,2 \[Pi]}]];
 
-
-
-
+Print[Simplify[Subscript[P, det][NA]]]
 
 
 
