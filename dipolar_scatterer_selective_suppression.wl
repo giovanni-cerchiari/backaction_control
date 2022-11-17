@@ -44,6 +44,22 @@ It was executed sucessfully on a machine with the following specifications
 (*---------------------------------------------------------------------------------------------*)
 ClearAll["Global`*"]
 Needs["PlotLegends`"]
+
+(*----------------------------------------------------------------------------------------------*)
+(*----------------------------------------------------------------------------------------------*)
+(*PLOTS*)
+(*----------------------------------------------------------------------------------------------*)
+(*standard font size for all plots*)
+lgdfontsize = 16;
+(*frame flag that can be used for all plots*)
+frameflg = False;
+(*line style spec*)
+xyzlinestyle = {Directive[Red, Thick, Dashing[None]], Directive[Green, Thick, Dashing[None]],Directive[Blue, Thick, Dashing[None]],
+Directive[Black, Thick, Dashed], Directive[Black, Thick, Dashed],Directive[Blue, Thick, Dashed],
+Directive[Orange, Thick, Dashing[None]], Directive[Purple, Thick, Dashing[None]]};
+(*----------------------------------------------------------------------------------------------*)
+(*----------------------------------------------------------------------------------------------*)
+(*SPHERICAL COORDINATES*)
 SetCoordinates[Spherical]
 (*Generic direction in space*)
 nr[\[Theta]_,\[Phi]_]:={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
@@ -68,7 +84,7 @@ Print["(dpdipd\[CapitalOmega]) differential power radiate by a dipole
 
 (*---------------------------------------------------------------------------------------------*)
 (*---------------------------------------------------------------------------------------------*)
-(*SCATTERED POWER BY A LEVITATED SPHERE*)
+(*RADIATED POWER BY A LEVITATED SPHERE + SPHERICAL EMITTER*)
 (*The sphere has radius R0 and it is located in the center of the reference system*)
 (*---------------------------------------------------------------------------------------------*)
 (*Optical Green's function in the measurement region (free space)*)
@@ -111,21 +127,34 @@ Pratio2[\[Theta]D_,R0_]:=Evaluate[Simplify[Pc2det[\[Theta]D,R0]/Pm2det[\[Theta]D
 Pratio4[\[Theta]D_,R0_]:=Evaluate[Simplify[Pc4det[\[Theta]D,R0]/Pm2det[\[Theta]D,R0]]];
 (*Power ratio between the scattered light in the measurement region and in the control region without the hemipsherical mirror*)
 Pratio2out[\[Theta]D_,R0_]:=Evaluate[Simplify[Pm2detout[\[Theta]D,R0]/Pm2det[\[Theta]D,R0]]];
-
-
 (*------------------------------------------------------------------*)
 (*Plots and values*)
 Print["relative deviation of the scattered power between 2nd order to 4th order = ", relativeuncertainty[R0], "   (it does not depend on the angles!)"]
 Print["relative deviation of the scattered power between 2nd order to 4th order at the condition R0=\[Lambda]/5 -> ",N[Simplify[relativeuncertainty[\[Lambda]/5]]]]
-Plot[relativeuncertainty[R0]/.{\[Lambda]->1},{R0,0,0.5}]
-LogPlot[{Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},Pratio4[ArcSin[0.4],R0]/.{\[Lambda]->1}},{R0,0,0.3}]
-LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1}},{NA,0,1},PlotRange->{0.001,1}]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/10]]]]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/10 (4th order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/10]]]]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/5]]]]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/5  (4th order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/5]]]]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/10]]]]
-Print["scattered power ratio at NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/5]]]]
+(*2D axes label*)
+xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["(P2-P4)/P2",Bold,Black,lgdfontsize]};
+pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
+Plot[relativeuncertainty[R0]/.{\[Lambda]->1},{R0,0,0.4},PlotLegend->pltlgdxyz, LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
+	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+xylabl = {Style["R0/\[Lambda]",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
+pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
+LogPlot[{Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},Pratio4[ArcSin[0.4],R0]/.{\[Lambda]->1}},{R0,0,0.3},PlotLegend->pltlgdxyz,
+	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
+	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
+pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
+LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1}},{NA,0,1},PlotRange->{0.001,1},PlotLegend->pltlgdxyz,
+	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
+	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/10]]]]
+Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/10 (4th order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/10]]]]
+Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/5]]]]
+Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/5  (4th order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/5]]]]
+Print["scattered power ratio at conditions: without mirror, NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/10]]]]
+Print["scattered power ratio at conditions: without mirror, NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/5]]]]
 
 
 (*----------------------------------------------------------------------------------------------*)
@@ -227,28 +256,14 @@ Print[""]
 Print["SmirrorQPD =", SmirrorQPD[\[Theta],\[Theta]0,\[Phi]0]]
 
 
-Needs["PlotLegends`"]
-(*----------------------------------------------------------------------------------------------*)
-(*----------------------------------------------------------------------------------------------*)
-(*PLOTS*)
-(*----------------------------------------------------------------------------------------------*)
-(*standard font size for all plots*)
-lgdfontsize = 16;
-(*frame flag that can be used for all plots*)
-frameflg = False;
 (*----------------------------------------------------------------------------------------------*)
 (*3D axes label*)
 xyzlabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize],Style["z",Bold,Black,lgdfontsize]};
 (*2D axes label*)
 xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["Sba",Bold,Black,lgdfontsize]};
-(*plot legend spec*)
-pltlgdxyz100={Style["suppressed x",Black,lgdfontsize],Style["suppressed y",Black,lgdfontsize],Style["suppressed z",Black,lgdfontsize], Style["free space y-z",Black,lgdfontsize], Style["free space x",Black,lgdfontsize]};
-(*line style spec*)
-xyzlinestyle = {Directive[Red, Thick, Dashing[None]], Directive[Green, Thick, Dashing[None]],Directive[Blue, Thick, Dashing[None]],
-Directive[Black, Thick, Dashed], Directive[Black, Thick, Dashed],Directive[Blue, Thick, Dashed],Directive[Orange, Thick, Dashing[None]], Directive[Purple, Thick, Dashing[None]]};
 (*plotting*)
 Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], Sba[\[Pi]/2,0,0]/Sba[\[Pi]/2,0,0], Sba[\[Pi]/2,\[Pi]/2,0]/Sba[\[Pi]/2,0,0]},{x,0,1},
-	PlotLegend->pltlgdxyz100,
+	PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
