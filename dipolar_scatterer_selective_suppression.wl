@@ -47,6 +47,8 @@ Needs["PlotLegends`"]
 SetCoordinates[Spherical]
 (*Generic direction in space*)
 nr[\[Theta]_,\[Phi]_]:={Cos[\[Phi]]*Sin[\[Theta]],Sin[\[Phi]]*Sin[\[Theta]],Cos[\[Theta]]};
+n\[Theta][\[Theta]_,\[Phi]_]:={Cos[\[Phi]]*Cos[\[Theta]],Sin[\[Phi]]*Cos[\[Theta]],-Sin[\[Theta]]};
+n\[Phi][\[Theta]_,\[Phi]_]:={-Sin[\[Phi]],Cos[\[Phi]],0};
 Print["Generic direction in space (\[Theta],\[Phi]) = ", MatrixForm[nr[\[Theta],\[Phi]]]]
 (*---------------------------------------------------------------------------------------------*)
 (*---------------------------------------------------------------------------------------------*)
@@ -190,10 +192,6 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
 
 
-(* ::InheritFromParent:: *)
-(*/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}*)
-
-
 (* --------------------------------------------*)
 (* ORIENTATION OF A DIPOLE
 The calculation is based on the technique described in
@@ -203,36 +201,29 @@ Phys. Rev. A 105, 053504 (2022), doi:10.1103/PhysRevA.100.043821
 ----
 *)
 dipole[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_]:= \[Alpha]0*E0*{1,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]};
-ux[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{nr[\[Theta],\[Phi]][[1]],0,0};
-uy[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{0, nr[\[Theta],\[Phi]][[2]], 0};
-uz[\[Theta]_,\[Phi]_]:=Sqrt[3/(8*\[Pi])]*{0,0,nr[\[Theta],\[Phi]][[3]]};
+ui[\[Theta]_,\[Phi]_,n_]:=Sqrt[3/(8*\[Pi])]*(n\[Theta][\[Theta],\[Phi]]*n\[Theta][\[Theta],\[Phi]][[n]]+n\[Phi][\[Theta],\[Phi]]*n\[Phi][\[Theta],\[Phi]][[n]]);
 (*checking orthogonality condition*)
-uiuj[ui_,uj_,\[Theta]_,\[Phi]_]:= Integrate[Integrate[ui[\[Theta],\[Phi]].uj[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uxuy = Integrate[Integrate[ux[\[Theta],\[Phi]].uy[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uxuz = Integrate[Integrate[ux[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uyuy = Integrate[Integrate[uy[\[Theta],\[Phi]].uy[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uyuz = Integrate[Integrate[uy[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
-uzuz = Integrate[Integrate[uz[\[Theta],\[Phi]].uz[\[Theta],\[Phi]]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
+uiuj[i_,j_]:= Integrate[Integrate[ui[\[Theta],\[Phi],i].ui[\[Theta],\[Phi],j]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}];
 Print["check ortoghonality conditions"]
-Print["ux.ux = ", uiuj[ux,ux,\[Theta],\[Phi]], "   ux.uy = ", uiuj[ux,uy,\[Theta],\[Phi]],  "   ux.uz = ", uiuj[ux,uz,\[Theta],\[Phi]]]
-Print["uy.uy = ", uiuj[uy,uy,\[Theta],\[Phi]], "   uy.uz = ", uiuj[uy,uz,\[Theta],\[Phi]]]
-Print["uz.uz = ", uiuj[uz,uz,\[Theta],\[Phi]]]
+Print["ux.ux = ", uiuj[1,1], "   ux.uy = ", uiuj[1,2],  "   ux.uz = ", uiuj[1,3]]
+Print["uy.uy = ", uiuj[2,2], "   uy.uz = ", uiuj[2,3]]
+Print["uz.uz = ", uiuj[3,3]]
 (*Green's tensor*)
-Gt[\[Theta]_,\[Phi]_]:=Sqrt[8*\[Pi]/3]*{ux[\[Theta],\[Phi]], uy[\[Theta],\[Phi]],uz[\[Theta],\[Phi]]};
+Gt[\[Theta]_,\[Phi]_]:=Sqrt[8*\[Pi]/3]*{ui[\[Theta],\[Phi],1], ui[\[Theta],\[Phi],2],ui[\[Theta],\[Phi],3]};
 Print["Green's tensor = ", MatrixForm[Gt[\[Theta],\[Phi]]]]
 (*Scattered electric field*)
 Esc[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:=(\[Omega]0^2/(4*\[Pi]*\[Epsilon]0*c^2))*Exp[((I*2*\[Pi])/\[Lambda])*r]*Gt[\[Theta],\[Phi]].dipole[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
 (*Scattered intensity*)
-Intensity[\[Theta]D_]:=Evaluate[Integrate[Integrate[(\[Epsilon]0*c/2)*Conjugate[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]].Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],0,\[Theta]D}, Assumptions->{\[Theta]D>0}]];
+simplifyconditions = {c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0, Element[\[Theta], Reals], Element[\[Phi], Reals]};
+inte\[Theta]\[Phi] = Simplify[(\[Epsilon]0*c/2)*Conjugate[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]].Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]*Sin[\[Theta]], Assumptions->simplifyconditions];
+inte\[Theta] = Integrate[inte\[Theta]\[Phi],{\[Phi],0,2*\[Pi]}, Assumptions->simplifyconditions];
+Intensity[\[Theta]DD_]:= Evaluate[Integrate[inte\[Theta],{\[Theta],0,\[Theta]D}, Assumptions->simplifyconditions]/.{\[Theta]D->\[Theta]DD}];
 (*Integrated scattered power. The integral is doubled to consider the regions 0<\[Theta]<\[Theta]D and \[Pi]-\[Theta]D<\[Theta]<\[Pi] simultanously. Allowed values of \[Theta]D are in the interval [0,\[Pi]/2]*)
-P0[\[Theta]D_]:= Simplify[2*Intensity[\[Theta]D],Assumptions->{c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0}];
-Print["Total power free space (\[CapitalDelta]\[Delta]\[Rule]0,\[CapitalDelta]\[Epsilon]\[Rule]0). P0[\[Pi]/2] = ",P0[\[Pi]/2]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}]
-Print["Total power in presence of the hemipherical mirror (\[CapitalDelta]\[Delta]\[Rule]0,\[CapitalDelta]\[Epsilon]\[Rule]0). P0[\[Theta]D] = ",P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}]
-Simplify[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]/Sqrt[P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0,\[CapitalDelta]\[Epsilon]->0}],Assumptions->{c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0}]
+P0[\[Theta]D_]:= Simplify[2*Intensity[\[Theta]D],Assumptions->simplifyconditions];
+Print["Scattered power free space. P0[\[Pi]/2] = ", Simplify[P0[\[Pi]/2]]]
+Print["Scattered power in cone with condition \[Theta]<\[Theta]D. I[\[Theta]D] = ", Simplify[P0[\[Theta]D]]]
+Print["Scattered power free space with \[CapitalDelta]\[Delta]=\[CapitalDelta]\[Epsilon]=0. I[\[Pi]/2] = ", Simplify[P0[\[Pi]/2]/.{\[CapitalDelta]\[Delta]->0, \[CapitalDelta]\[Epsilon]->0}]]
+Print["Scattered power in cone with \[Theta]<\[Theta]D with \[CapitalDelta]\[Delta]=\[CapitalDelta]\[Epsilon]=0. I[\[Theta]D] = ", Simplify[P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0, \[CapitalDelta]\[Epsilon]->0}]]
 
 
-
-
-
-
-
+Spp=hbar*\[Omega]0*Plo/(2*\[Pi])
