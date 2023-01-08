@@ -127,25 +127,30 @@ Pratio2[\[Theta]D_,R0_]:=Evaluate[Simplify[Pc2det[\[Theta]D,R0]/Pm2det[\[Theta]D
 Pratio4[\[Theta]D_,R0_]:=Evaluate[Simplify[Pc4det[\[Theta]D,R0]/Pm2det[\[Theta]D,R0]]];
 (*Power ratio between the scattered light in the measurement region and in the control region without the hemipsherical mirror*)
 Pratio2out[\[Theta]D_,R0_]:=Evaluate[Simplify[Pm2detout[\[Theta]D,R0]/Pm2det[\[Theta]D,R0]]];
+
+
 (*------------------------------------------------------------------*)
 (*Plots and values*)
 Print["relative deviation of the scattered power between 2nd order to 4th order = ", relativeuncertainty[R0], "   (it does not depend on the angles!)"]
 Print["relative deviation of the scattered power between 2nd order to 4th order at the condition R0=\[Lambda]/5 -> ",N[Simplify[relativeuncertainty[\[Lambda]/5]]]]
 (*2D axes label*)
+xyzlinestyle = {Directive[Black, Thick, Dashing[None]],
+Directive[Black, Thick, Dashed], Directive[Red, Thick, Dashing[None]], Directive[Red, Thick, Dashed]};
 xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["(P2-P4)/P2",Bold,Black,lgdfontsize]};
-pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
+pltlgdxyz={Style["relative",Black,lgdfontsize]};
 Plot[relativeuncertainty[R0]/.{\[Lambda]->1},{R0,0,0.4},PlotLegend->pltlgdxyz, LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
 xylabl = {Style["R0/\[Lambda]",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
-pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
-LogPlot[{Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},Pratio4[ArcSin[0.4],R0]/.{\[Lambda]->1}},{R0,0,0.3},PlotLegend->pltlgdxyz,
+pltlgdxyz={Style["full NA - 2nd order",Black,lgdfontsize],Style["full NA - 4th order",Black,lgdfontsize],Style["NA=0.4 - 2nd order",Black,lgdfontsize], Style["NA=0.4 - 4th order",Black,lgdfontsize]};
+LogPlot[{(Pc2det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.{\[Lambda]->1},(Pc4det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.{\[Lambda]->1},Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},Pratio4[ArcSin[0.4],R0]/.{\[Lambda]->1}},{R0,0,0.3},PlotRange->{0.0001,1},PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
 xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
-pltlgdxyz={Style["2nd order",Black,lgdfontsize],Style["4th order",Black,lgdfontsize],Style["z",Black,lgdfontsize]};
-LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1}},{NA,0,1},PlotRange->{0.001,1},PlotLegend->pltlgdxyz,
+pltlgdxyz={Style["\[Lambda]/10 - 2nd order",Black,lgdfontsize],Style["\[Lambda]/10 - 4th order",Black,lgdfontsize],Style["\[Lambda]/5 - 2nd order",Black,lgdfontsize],Style["\[Lambda]/5 - 4th order",Black,lgdfontsize]};
+LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio2[ArcSin[NA],\[Lambda]/5]/.{\[Lambda]->1},Pratio4[ArcSin[NA],\[Lambda]/5]/.{\[Lambda]->1}},{NA,0,1},
+    PlotRange->{0.001,1},PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
@@ -289,18 +294,57 @@ Print["uz.uz = ", uiuj[3,3]]
 Gt[\[Theta]_,\[Phi]_]:=Sqrt[8*\[Pi]/3]*{ui[\[Theta],\[Phi],1], ui[\[Theta],\[Phi],2],ui[\[Theta],\[Phi],3]};
 Print["Green's tensor = ", MatrixForm[Gt[\[Theta],\[Phi]]]]
 (*Scattered electric field*)
-Esc[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:=(\[Omega]0^2/(4*\[Pi]*\[Epsilon]0*c^2))*Exp[((I*2*\[Pi])/\[Lambda])*r]*Gt[\[Theta],\[Phi]].dipole[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
+Esc[\[Alpha]0_,E0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:=Sqrt[\[Epsilon]0*c/2]*(\[Omega]0^2/(4*\[Pi]*\[Epsilon]0*c^2))*Exp[((I*2*\[Pi])/\[Lambda])*r]*Gt[\[Theta],\[Phi]].dipole[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]];
+(*-------------------*)
 (*Scattered intensity*)
-simplifyconditions = {c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0, Element[\[Theta], Reals], Element[\[Phi], Reals]};
-inte\[Theta]\[Phi] = Simplify[(\[Epsilon]0*c/2)*Conjugate[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]].Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]*Sin[\[Theta]], Assumptions->simplifyconditions];
+simplifyconditions = {c>0, \[Epsilon]0>0, \[Alpha]0 > 0, \[Omega]0 > 0, \[CapitalDelta]\[Delta] > 0, \[CapitalDelta]\[Epsilon] > 0, E0 > 0, \[Lambda]>0, r>0, Plo>0, PP0>0, \[Eta]>0, Element[\[Theta], Reals], Element[\[Phi], Reals]};
+inte\[Theta]\[Phi] = Simplify[Conjugate[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]].Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]*Sin[\[Theta]], Assumptions->simplifyconditions];
 inte\[Theta] = Integrate[inte\[Theta]\[Phi],{\[Phi],0,2*\[Pi]}, Assumptions->simplifyconditions];
-Intensity[\[Theta]DD_]:= Evaluate[Integrate[inte\[Theta],{\[Theta],0,\[Theta]D}, Assumptions->simplifyconditions]/.{\[Theta]D->\[Theta]DD}];
+Intensity[\[Theta]DD_,\[CapitalDelta]\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[CapitalDelta]\[Epsilon]_,\[Alpha]\[Alpha]0_,EE0_]:= Evaluate[Integrate[inte\[Theta],{\[Theta],0,\[Theta]D}, Assumptions->simplifyconditions]/.{\[Theta]D->\[Theta]DD,\[CapitalDelta]\[Delta]->\[CapitalDelta]\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]->\[CapitalDelta]\[CapitalDelta]\[Epsilon],\[Alpha]0->\[Alpha]\[Alpha]0, E0->EE0}];
 (*Integrated scattered power. The integral is doubled to consider the regions 0<\[Theta]<\[Theta]D and \[Pi]-\[Theta]D<\[Theta]<\[Pi] simultanously. Allowed values of \[Theta]D are in the interval [0,\[Pi]/2]*)
-P0[\[Theta]D_]:= Simplify[2*Intensity[\[Theta]D],Assumptions->simplifyconditions];
-Print["Scattered power free space. P0[\[Pi]/2] = ", Simplify[P0[\[Pi]/2]]]
-Print["Scattered power in cone with condition \[Theta]<\[Theta]D. I[\[Theta]D] = ", Simplify[P0[\[Theta]D]]]
-Print["Scattered power free space with \[CapitalDelta]\[Delta]=\[CapitalDelta]\[Epsilon]=0. I[\[Pi]/2] = ", Simplify[P0[\[Pi]/2]/.{\[CapitalDelta]\[Delta]->0, \[CapitalDelta]\[Epsilon]->0}]]
-Print["Scattered power in cone with \[Theta]<\[Theta]D with \[CapitalDelta]\[Delta]=\[CapitalDelta]\[Epsilon]=0. I[\[Theta]D] = ", Simplify[P0[\[Theta]D]/.{\[CapitalDelta]\[Delta]->0, \[CapitalDelta]\[Epsilon]->0}]]
+P0full[\[Theta]D_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Alpha]\[Alpha]0_,EE0_]:=Simplify[2*Intensity[\[Theta]D,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Alpha]\[Alpha]0,EE0],Assumptions->simplifyconditions];
+P0[\[Theta]D_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Alpha]\[Alpha]0_,EE0_]:=Simplify[Normal[Series[P0full[\[Theta]D,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Alpha]\[Alpha]0,EE0],{\[CapitalDelta]\[Delta],0,1},{\[CapitalDelta]\[Epsilon],0,1}]],Assumptions->simplifyconditions];
+Print["Scattered power in free space. P0[\[Pi]/2] = ", Simplify[P0[\[Pi]/2,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Alpha]0,E0]]]
+Print["Scattered power in the cone with condition \[Theta]<\[Theta]D to first order in \[CapitalDelta]\[Delta] and \[CapitalDelta]\[Epsilon]. I[\[Theta]D] = ", Simplify[P0[\[Theta]D,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Alpha]0,E0]]]
+(*-------------------*)
+(*Interference*)
+(*Local oscillator field*)
+Elo[Plo_,\[Theta]_,\[Phi]_,n_]:=Sqrt[Plo]*ui[\[Theta],\[Phi],2]*Exp[I*((2*\[Pi]*r)/\[Lambda])]
+(*Converting the scattered power expression from \[Alpha]0,E0 to PP0*)
+EscP0[PPP0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:= Evaluate[Simplify[Esc[\[Alpha]0,E0,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]/.{E0->E0*Sqrt[PP0/P0[\[Pi]/2,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Alpha]0,E0]]},Assumptions->simplifyconditions]/.{PP0->PPP0}];
+(*Intensity of the interference.*)
+(*WARNING: In this part, powers Plo and PP0 are squared for easier Taylor expansion*)
+intdet\[Theta]\[Phi][Plo_,PP0_,\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_,\[Theta]_,\[Phi]_]:=Evaluate[Simplify[Conjugate[(Elo[Plo^2,\[Theta],\[Phi],2]+EscP0[PP0^2,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]])].(Elo[Plo^2,\[Theta],\[Phi],2]+EscP0[PP0^2,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon],\[Theta],\[Phi]]), Assumptions->simplifyconditions]];
+(*-------------------*)
+(*Measurement imprecision*)
+(*Taylor expansion to order 0 and 1 in the variable of the measurement. In this case \[CapitalDelta]\[Delta], which is now called x*)
+ty0[Plo_,PP0_,x_,\[Theta]_,\[Phi]_]:=Evaluate[Simplify[intdet\[Theta]\[Phi][Plo,PP0,0,0,\[Theta],\[Phi]], Assumptions->simplifyconditions]];
+ty1[Plo_,PP0_,x_,\[Theta]_,\[Phi]_]:=Evaluate[Simplify[Normal[Series[intdet\[Theta]\[Phi][Plo,PP0,x,0,\[Theta],\[Phi]],{x,0,1}]], Assumptions->simplifyconditions]];
+(*Extracting the part of the detected signal that is actually the signal connect to the variable to measure*)
+d\[Beta][Plo_,PP0_,x_,\[Theta]_,\[Phi]_]:=Evaluate[Simplify[Normal[Series[ty1[Plo,PP0,x,\[Theta],\[Phi]]-ty0[Plo,PP0,x,\[Theta],\[Phi]],{PP0,0,1}]], Assumptions->simplifyconditions]];
+Print["Actual signal cahnging with x. d\[Beta] = ", Simplify[d\[Beta][(Plo)^(1/2),(PP0)^(1/2),x,\[Theta],\[Phi]], Assumptions->simplifyconditions]]
+(*differential power spectral density of the noise*)
+d\[Sigma][Plo_,PP0_,x_,\[Theta]_,\[Phi]_]:=(hbar*c/\[Lambda])*Evaluate[Simplify[Normal[Series[ty0[Plo,PP0,x,\[Theta],\[Phi]],{PP0,0,0}]], Assumptions->simplifyconditions]];
+Print["Power spectral density of the noise. d\[Sigma] = ", Simplify[d\[Sigma][(Plo)^(1/2),sqPP0,x,\[Theta],\[Phi]], Assumptions->simplifyconditions]]
+(*Inverse differential imprecision for an ideal spherical differential detector.*)
+sm1[Plo_,PP0_,x_,\[Theta]_,\[Phi]_]:=Evaluate[Simplify[d\[Beta][Plo,PP0,x,\[Theta],\[Phi]]^2/d\[Sigma][Plo,PP0,x,\[Theta],\[Phi]], Assumptions->simplifyconditions]];
+Print["Inverse differential imprecision. d\[Beta]^2/d\[Sigma] = ",Simplify[sm1[(Plo)^(1/2),(PP0)^(1/2),x,\[Theta],\[Phi]], Assumptions->simplifyconditions]]
+(*Integrating the differential imprecision to obtain the total imprecision*)
+S\[Delta]\[Delta]\[Theta]m1[PP0_,x_,\[Theta]_]:= Evaluate[Integrate[sm1[PP0,x,\[Theta],\[Phi]]*Sin[\[Theta]],{\[Phi],0,2\[Pi]},Assumptions->simplifyconditions]];
+S\[Delta]\[Delta]tmp[PP0_,x_,\[Theta]D_]:= Evaluate[1/Integrate[S\[Delta]\[Delta]\[Theta]m1[PP0,x,\[Theta]],{\[Theta],0,\[Theta]D},Assumptions->simplifyconditions]];
+(*WARNING: Restoring the correct powers of Plo and PP0*)
+S\[Delta]\[Delta][PP0_,x_,\[Theta]D_]:=Evaluate[Simplify[S\[Delta]\[Delta]tmp[Sqrt[PP0],x,\[Theta]D],Assumptions->simplifyconditions]];
+Print["Total imprecision in free space. S\[Delta]\[Delta][\[Pi]] = ", S\[Delta]\[Delta][PP0,x,\[Pi]]/.{\[Lambda]->(2*\[Pi]*c)/\[Omega]0}]
+Print["Total imprecision in the cone with condition \[Theta]<\[Theta]D. S\[Delta]\[Delta][\[Theta]D] = ", S\[Delta]\[Delta][PP0,x,\[Theta]D]]
+(*-------------------*)
+(*Back action*)
+(*Torque fluctuation restricted to the emission cone.*)
+Syy\[Tau]\[Tau][\[Theta]D_]:=(hbar/(2*\[Pi]*\[Omega]0))*(x^2)*P0[\[Theta]D,x,y,\[Alpha]0,E0];
+Print["Back action free space. Syy\[Tau]\[Tau][\[Pi]] = ", Simplify[Syy\[Tau]\[Tau][\[Pi]], Assumptions->simplifyconditions]]
+Print["Back action attribute to the scattering in the cone with condition \[Theta]<\[Theta]D. Syy\[Tau]\[Tau][\[Theta]D] = ", Syy\[Tau]\[Tau][\[Theta]D]]
+(*-------------------*)
+(*Product of back action and imprecision to test Heisenberg limit*)
+Print["Product between imprecision and back action = ", Simplify[Syy\[Tau]\[Tau][\[Theta]D]*S\[Delta]\[Delta][P0[\[Pi],x,y,\[Alpha]0,E0],x,\[Theta]D], Assumptions->simplifyconditions]/.{\[Lambda]->(2*\[Pi]*c)/\[Omega]0}]
 
 
-Spp=hbar*\[Omega]0*Plo/(2*\[Pi])
+
