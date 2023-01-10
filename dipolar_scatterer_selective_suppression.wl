@@ -132,10 +132,15 @@ Print["detection limit y = ", Simplify[Smirrorvet[\[Theta]][[2]]*Sbavet[\[Theta]
 Print["detection limit z = ", Simplify[Smirrorvet[\[Theta]][[3]]*Sbavet[\[Theta]][[3]]]]
 
 
-(*----------------------------------------------------------------------------------------------*)
-(*----------------------------------------------------------------------------------------------*)
-(*IDEAL MEASUREMENT ROTATION*)
-
+Subscript[r, 1][\[Alpha]_,d_]:={d Cos[\[Alpha]],0,d Sin[\[Alpha]]};
+Subscript[r, 2][\[Alpha]_,d_]:=-Subscript[r, 1][\[Alpha],d];
+Subscript[EF, sc,1][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Exp[(I (2 \[Pi]) nr[\[Theta],\[Phi]].Subscript[r, 1][\[Alpha],d])/\[Lambda]];
+Subscript[EF, sc,2][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Exp[(I (2 \[Pi]) nr[\[Theta],\[Phi]].Subscript[r, 2][\[Alpha],d])/\[Lambda]];
+Subscript[EF, i,1][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=-\[Rho] Conjugate[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]] Exp[-((I (2 \[Pi]) 2 R)/\[Lambda])];
+Subscript[EF, i,2][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=-\[Rho] Conjugate[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]] Exp[-((I (2 \[Pi]) 2 R)/\[Lambda])];
+IN[\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Abs[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, sc,2][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, i,1][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, i,2][\[Theta],\[Phi],\[Alpha],d]]^2;
+assumptions={d==1,d\[Element]Reals,0<=\[Alpha]<=2 \[Pi],\[Alpha]\[Element]Reals,Subscript[EF, o,1]\[Element]Vectors[3,Complexes],Subscript[EF, o,2]\[Element]Vectors[3,Complexes],\[Lambda]>0,\[Lambda]\[Element]Reals,0<=\[Theta]<=2 \[Pi],\[Theta]\[Element]Reals,0<=\[Phi]<=2 \[Pi],\[Phi]\[Element]Reals,R==20 d,R\[Element]Reals,\[Rho]>0,\[Rho]\[Element]Reals,Abs[Subscript[EF, 0,1]]==1,Abs[Subscript[EF, 0,2]]==1};
+Print[Evaluate[FullSimplify[IN[\[Theta],\[Phi],\[Alpha],d],Assumptions->assumptions]]]
 
 
 (*----------------------------------------------------------------------------------------------*)
