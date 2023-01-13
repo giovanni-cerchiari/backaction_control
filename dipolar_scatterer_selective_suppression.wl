@@ -199,30 +199,33 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 (**)
 
 
-Subscript[n, theta][\[Theta]_,\[Phi]_]:={Cos[\[Theta]] Cos[\[Phi]],Cos[\[Theta]] Sin[\[Phi]],-Sin[\[Theta]]};
-Subscript[n, phi][\[Phi]_]:={-Sin[\[Phi]],Cos[\[Phi]],0};
-p[\[CapitalDelta]\[Delta]_,\[CapitalDelta]\[Epsilon]_]:=Subscript[EF, 0] Subscript[\[Alpha], 0] {1,\[CapitalDelta]\[Delta],\[CapitalDelta]\[Epsilon]};
-Subscript[u, i][\[Theta]_,\[Phi]_,i_]:=Sqrt[3/(8 \[Pi])] (Subscript[n, theta][\[Theta],\[Phi]] Subscript[n, theta][\[Theta],\[Phi]][[i]]+Subscript[n, phi][\[Phi]] Subscript[n, phi][\[Phi]][[i]]);
-U[\[Theta]_,\[Phi]_]:={Subscript[u, i][\[Theta],\[Phi],1],Subscript[u, i][\[Theta],\[Phi],2],Subscript[u, i][\[Theta],\[Phi],3]};
-u[i_,j_]:=\!\(
-\*SubsuperscriptBox[\(\[Integral]\), \(0\), \(2\ \[Pi]\)]\(\((
-\*SubsuperscriptBox[\(\[Integral]\), \(0\), \(\[Pi]\)]\(Sin[\[Theta]]\ \(U[\[Theta], \[Phi]]\)[[i]] . \(U[\[Theta], \[Phi]]\)[[j]]\) \[DifferentialD]\[Theta])\) \[DifferentialD]\[Phi]\)\);
-G[\[Theta]_,\[Phi]_]:=Sqrt[(8 \[Pi])/3] U[\[Theta],\[Phi]];
-Subscript[EF, sc][r_,\[Theta]_,\[Phi]_]:=(\!\(
-\*SubsuperscriptBox[\(\[Omega]\), \(0\), \(2\)]\ 
-\*SuperscriptBox[\(E\), \(I\ k\ r\)]\ \(G[\[Theta], \[Phi]] . p[\[CapitalDelta]\[Delta], \[CapitalDelta]\[Epsilon]]\)\))/((4 \[Pi] r) (c^2 Subscript[\[Epsilon], 0]));
-Subscript[EF, lo][r_,\[Theta]_,\[Phi]_]:=-((\[Rho] Subscript[EF, sc][r,\[Theta],\[Phi]])/E^(I 2 k Subscript[R, s]));
-Subscript[IN, tot][r_,\[Theta]_,\[Phi]_]:=FullSimplify[1/2 c Subscript[\[Epsilon], 0] Norm[Subscript[EF, lo][r,\[Theta],\[Phi]]+Subscript[EF, sc][r,\[Theta],\[Phi]]]^2,Assumptions->{0<=\[Theta]<=\[Pi]/2,0<=\[Phi]<=\[Pi],Subscript[R, s]>0,Subscript[R, s]\[Element]Reals,k\[Element]Reals,r>0,r\[Element]Reals,r>0,\[CapitalDelta]\[Delta]\[Element]Reals,\[CapitalDelta]\[Epsilon]\[Element]Reals,\[Rho]>0,\[Rho]\[Element]Reals,c\[Element]Reals,c>0,Subscript[\[Epsilon], 0]>0,Subscript[\[Omega], 0]>0,Subscript[\[Omega], 0]\[Element]Reals,Subscript[EF, 0]\[Element]Reals,Subscript[EF, 0]>0,Subscript[\[Alpha], 0]\[Element]Reals,Subscript[\[Alpha], 0]>0}];
-Subscript[P, det][\[CapitalTheta]_]:=FullSimplify[\!\(
-\*SubsuperscriptBox[\(\[Integral]\), \(0\), \(2\ \[Pi]\)]\(\((
-\*SubsuperscriptBox[\(\[Integral]\), \(0\), \(\[CapitalTheta]\)]
-\(\*SubscriptBox[\(IN\), \(tot\)]\)[r, \[Theta], \[Phi]] \[DifferentialD]\[Theta])\) \[DifferentialD]\[Phi]\)\),Assumptions->{\[Rho]==1,k Subscript[R, s]==\[Pi]/2}];
+nr[\[Theta]_,\[Phi]_]:={Cos[\[Phi]] Sin[\[Theta]],Sin[\[Phi]] Sin[\[Theta]],Cos[\[Theta]]};
+f[\[Theta]_,\[Phi]_,r_,a_,b_,\[Theta]1_,\[Phi]1_,r1_,\[Theta]2_,\[Phi]2_,r2_]:=a DiracDelta[\[Theta]-\[Theta]1] DiracDelta[\[Phi]-\[Phi]1] DiracDelta[r-r1]+b DiracDelta[\[Theta]-\[Theta]2] DiracDelta[\[Phi]-\[Phi]2] DiracDelta[r-r2];
+g[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_]:=Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[(I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda]];
+gi[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_,\[Rho]_,R_]:=-\[Rho] Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[-((I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda])-(I 2 (2 \[Pi]) R)/\[Lambda]];
+assump={k\[Element]Reals,k>0,0<\[Theta]k<\[Pi],0<\[Phi]k<2 \[Pi],R\[Element]Reals,R>0,\[Rho]\[Element]Reals,\[Rho]>0,\[Lambda]\[Element]Reals,\[Lambda]>0,x0\[Element]Reals,x0>0,y\[Element]Reals,z\[Element]Reals,\[CapitalDelta]\[Element]Reals,x0>\[CapitalDelta]>0,0<=\[Theta]<\[Pi],0<\[Phi]<=2 \[Pi],r0>0,n>0,n\[Element]Integers};
+gb[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0,x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0,x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
+gm=Simplify[Normal[Series[gb[\[Theta],\[Phi],x0,\[CapitalDelta],R],{x0,0,2}]],Assumptions->assump];
+
+Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gb[\[Theta],\[Phi],x0,\[CapitalDelta],R];
+(*Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gm*)
+Print["Electric field E(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]];
+Int[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[ComplexExpand[(Conjugate[Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]])*(Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R])],Assumptions->assump];
+Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]];
+
+(*
+Int2nd[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[Normal[Series[Int[\[Theta],\[Phi],x0,\[CapitalDelta],R],{\[CapitalDelta],0,2}]],Assumptions\[Rule]assump];
+Print["Intensity up to and including second order in \[CapitalDelta]: I(\[Theta],\[Phi],Subscript[x, 0],\[CapitalDelta],R) \[Proportional] ", Int2nd[\[Theta],\[Phi],x0,\[CapitalDelta],R]]
+
+P[\[CapitalDelta]_]:=Integrate[Integrate[(Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]/.{\[Lambda]\[Rule]1})*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,\[Pi]}];
+Plot[P[\[CapitalDelta]],{\[CapitalDelta],1/8,1/2}]*)
+
+Print["Intensity in first order of \[CapitalDelta]: ", Series[Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]],{\[CapitalDelta],0,1}]/.{\[Lambda]->1}]
+
+Pphi[\[CapitalDelta]_,\[Phi]_]:=Simplify[Evaluate[Integrate[Normal[Series[Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]/.{\[Lambda]->1},{\[CapitalDelta],0,1}]],{\[Theta],0,\[Pi]}]],Assumptions->assump];
+
+Plot[NIntegrate[Pphi[\[CapitalDelta],\[Phi]],{\[Phi],0,\[Pi]}],{\[CapitalDelta],0,1/2}]
 
 
-Print["Intensity: ",Subscript[IN, tot][r,\[Theta],\[Phi]]];
-Print["Power: ",Subscript[P, det][\[CapitalTheta]]];
-preFactor=(Subscript[EF, 0] Subscript[\[Alpha], 0] \!\(\*SubsuperscriptBox[\(\[Omega]\), \(0\), \(2\)]\))/(4 c^(3/2) Sqrt[\[Pi] Subscript[\[Epsilon], 0]] r);
-Print["Normalised Power: ",Simplify[Subscript[P, det][\[CapitalTheta]]/preFactor^2]];
-Subscript[P, \[CapitalDelta]\[Epsilon]][\[CapitalTheta]_]:=4 \[CapitalDelta]\[Epsilon]^2 \[CapitalTheta]-2 \[CapitalDelta]\[Epsilon]^2 Sin[2 \[CapitalTheta]];
-Subscript[P, \[CapitalDelta]\[Delta]][\[CapitalTheta]_]:=6 \[CapitalDelta]\[Delta]^2 \[CapitalTheta]+\[CapitalDelta]\[Delta]^2 Sin[2 \[CapitalTheta]];
-Plot[{Subscript[P, \[CapitalDelta]\[Epsilon]][\[CapitalTheta]]/. {\[CapitalDelta]\[Epsilon]->1},Subscript[P, \[CapitalDelta]\[Delta]][\[CapitalTheta]]/. {\[CapitalDelta]\[Delta]->1}},{\[CapitalTheta],0,\[Pi]/2},AxesLabel->{\[CapitalTheta],Subscript[P, \[CapitalDelta]]},PlotLegends->{Subscript[P, \[CapitalDelta]\[Epsilon]][\[CapitalTheta]],Subscript[P, \[CapitalDelta]\[Delta]][\[CapitalTheta]]}]
+
+
