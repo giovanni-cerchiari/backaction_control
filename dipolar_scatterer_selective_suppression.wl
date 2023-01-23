@@ -203,29 +203,23 @@ nr[\[Theta]_,\[Phi]_]:={Cos[\[Phi]] Sin[\[Theta]],Sin[\[Phi]] Sin[\[Theta]],Cos[
 f[\[Theta]_,\[Phi]_,r_,a_,b_,\[Theta]1_,\[Phi]1_,r1_,\[Theta]2_,\[Phi]2_,r2_]:=a DiracDelta[\[Theta]-\[Theta]1] DiracDelta[\[Phi]-\[Phi]1] DiracDelta[r-r1]+b DiracDelta[\[Theta]-\[Theta]2] DiracDelta[\[Phi]-\[Phi]2] DiracDelta[r-r2];
 g[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_]:=Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[(I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda]];
 gi[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_,\[Rho]_,R_]:=-\[Rho] Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[-((I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda])-(I 2 (2 \[Pi]) R)/\[Lambda]];
-assump={k\[Element]Reals,k>0,0<\[Theta]k<\[Pi],0<\[Phi]k<2 \[Pi],R\[Element]Reals,R>0,\[Rho]\[Element]Reals,\[Rho]>0,\[Lambda]\[Element]Reals,\[Lambda]>0,x0\[Element]Reals,x0>0,y\[Element]Reals,z\[Element]Reals,\[CapitalDelta]\[Element]Reals,x0>\[CapitalDelta]>0,0<=\[Theta]<\[Pi],0<\[Phi]<=2 \[Pi],r0>0,n>0,n\[Element]Integers};
+assump={k\[Element]Reals,k>0,0<\[Theta]k<\[Pi],0<\[Phi]k<2 \[Pi],R\[Element]Reals,R>0,\[Rho]\[Element]Reals,\[Rho]>0,\[Lambda]\[Element]Reals,\[Lambda]>0,x0\[Element]Reals,x0>0,y\[Element]Reals,z\[Element]Reals,\[CapitalDelta]\[Element]Reals,x0>\[CapitalDelta]>0,0<=\[Theta]<\[Pi],0<\[Phi]<=2 \[Pi],r0>0,n>0,n\[Element]Integers,0<\[Epsilon]<\[Pi],Cos[\[Phi]]\[Element]Reals};
 gb[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0,x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0,x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
 gm=Simplify[Normal[Series[gb[\[Theta],\[Phi],x0,\[CapitalDelta],R],{x0,0,2}]],Assumptions->assump];
-
 Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gb[\[Theta],\[Phi],x0,\[CapitalDelta],R];
-(*Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gm*)
 Print["Electric field E(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]];
-Int[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[ComplexExpand[(Conjugate[Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]])*(Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R])],Assumptions->assump];
-Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]];
+Int[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[ComplexExpand[Conjugate[Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]] Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]],Assumptions->assump];
+Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20]];
 
-(*
-Int2nd[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[Normal[Series[Int[\[Theta],\[Phi],x0,\[CapitalDelta],R],{\[CapitalDelta],0,2}]],Assumptions\[Rule]assump];
-Print["Intensity up to and including second order in \[CapitalDelta]: I(\[Theta],\[Phi],Subscript[x, 0],\[CapitalDelta],R) \[Proportional] ", Int2nd[\[Theta],\[Phi],x0,\[CapitalDelta],R]]
 
-P[\[CapitalDelta]_]:=Integrate[Integrate[(Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]/.{\[Lambda]\[Rule]1})*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,\[Pi]}];
-Plot[P[\[CapitalDelta]],{\[CapitalDelta],1/8,1/2}]*)
 
-Print["Intensity in first order of \[CapitalDelta]: ", Series[Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]],{\[CapitalDelta],0,1}]/.{\[Lambda]->1}]
+gbRot[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi]-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi]+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
+gbRotFirst[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[Normal[Series[gbRot[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]],{\[Epsilon],0,1}]]];
+Print["Green's function \!\(\*SubscriptBox[\(g\), \(rot\)]\)(\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]) = ", gbRotFirst[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]]];
+IntRot[\[Theta]_,\[Phi]_,\[CapitalDelta]_,\[Epsilon]_]:=Simplify[ComplexExpand[Conjugate[gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20,\[Epsilon]]] gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20,\[Epsilon]]],Assumptions->assump];
+Print["Intensity for rotated non symmetric object I(\[Theta],\[Phi],x0,\[CapitalDelta],\[Epsilon]) \[Proportional] ", Normal[Series[IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]],{\[Epsilon],0,1},{\[CapitalDelta],0,1}]]/.{\[Lambda]->1}];
 
-Pphi[\[CapitalDelta]_,\[Phi]_]:=Simplify[Evaluate[Integrate[Normal[Series[Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21/20 \[Lambda]]/.{\[Lambda]->1},{\[CapitalDelta],0,1}]],{\[Theta],0,\[Pi]}]],Assumptions->assump];
-
-Plot[NIntegrate[Pphi[\[CapitalDelta],\[Phi]],{\[Phi],0,\[Pi]}],{\[CapitalDelta],0,1/2}]
-
+Evaluate[NIntegrate[Integrate[Normal[Series[IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]],{\[Epsilon],0,1},{\[CapitalDelta],0,1}]]/.{\[Lambda]->1},{\[Theta],0,\[Pi]}, Assumptions->assump],{\[Phi],0,2 \[Pi]}]]
 
 
 
