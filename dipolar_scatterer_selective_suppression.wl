@@ -209,17 +209,14 @@ gm=Simplify[Normal[Series[gb[\[Theta],\[Phi],x0,\[CapitalDelta],R],{x0,0,2}]],As
 Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gb[\[Theta],\[Phi],x0,\[CapitalDelta],R];
 Print["Electric field E(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]];
 Int[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[ComplexExpand[Conjugate[Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]] Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]],Assumptions->assump];
-Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20]];
-
+Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],x0,\[CapitalDelta],1]];
 
 
 gbRot[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi]-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi]+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
 gbRotFirst[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[Normal[Series[gbRot[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]],{\[Epsilon],0,1}]]];
-Print["Green's function \!\(\*SubscriptBox[\(g\), \(rot\)]\)(\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]) = ", gbRotFirst[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]]];
-IntRot[\[Theta]_,\[Phi]_,\[CapitalDelta]_,\[Epsilon]_]:=Simplify[ComplexExpand[Conjugate[gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20,\[Epsilon]]] gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],(21 \[Lambda])/20,\[Epsilon]]],Assumptions->assump];
-Print["Intensity for rotated non symmetric object I(\[Theta],\[Phi],x0,\[CapitalDelta],\[Epsilon]) \[Proportional] ", Normal[Series[IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]],{\[Epsilon],0,1},{\[CapitalDelta],0,1}]]/.{\[Lambda]->1}];
-
-Evaluate[NIntegrate[Integrate[Normal[Series[IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]],{\[Epsilon],0,1},{\[CapitalDelta],0,1}]]/.{\[Lambda]->1},{\[Theta],0,\[Pi]}, Assumptions->assump],{\[Phi],0,2 \[Pi]}]]
+Print["Green's function \!\(\*SubscriptBox[\(g\), \(rot\)]\)(\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]) = ",gbRotFirst[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]]];
+IntRot[\[Theta]_,\[Phi]_,\[CapitalDelta]_,\[Epsilon]_]:=Simplify[ComplexExpand[Conjugate[gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21 \[Lambda],\[Epsilon]]] gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21 \[Lambda],\[Epsilon]]],Assumptions->assump];
+Print["Intensity for rotated non symmetric object I(\[Theta],\[Phi],x0,\[CapitalDelta],\[Epsilon]) \[Proportional] ", IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]]];
 
 
 
