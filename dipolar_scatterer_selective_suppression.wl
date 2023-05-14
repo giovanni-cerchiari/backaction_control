@@ -451,6 +451,42 @@ Print["Product between imprecision and back action = ", Simplify[Syy\[Tau]\[Tau]
 
 
 
+(*VARIANCE operator*)
+(*radially symmetric Gaussian density distribution*)
+fgauss[x_,y_,z_,\[Sigma]_]:=\[Pi]^(-3/2)*\[Sigma]^(-3)*Exp[-(x^2+y^2+z^2)/\[Sigma]^2];
+Delfgauss[x_,y_,z_,\[Sigma]_]:= Grad[fgauss[x,y,z,\[Sigma]],{x,y,z}];
+geofgauss[\[Theta]_,\[Phi]_,\[Sigma]_]:=Evaluate[Simplify[Integrate[Integrate[Integrate[Delfgauss[x,y,z,\[Sigma]]*(nr[\[Theta],\[Phi]].{x,y,z}),{x,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{y,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{z,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],Assumptions->{\[Sigma]>0}]];
+Print["fgauss = ", fgauss[x,y,z,\[Sigma]]]
+Print["normalization fgauss = ", Simplify[Integrate[Integrate[Integrate[fgauss[x,y,z,\[Sigma]],{x,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{y,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{z,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],Assumptions->{\[Sigma]>0}]];
+Print["Delfgauss = ", Delfgauss[x,y,z,\[Sigma]]]
+Print["Geometric factors fgauss = ", geofgauss[\[Theta],\[Phi],\[Sigma]]]
+(*nr[\[Theta],\[Phi]]
+Integrate[Integrate[Integrate[fgauss[x,y,z,\[Sigma]],{x,-Infinity,Infinity}],{y,-Infinity,Infinity}],{z,-Infinity,Infinity}]
+*)
+
+
+
+(*Asymmetries*)
+fr[c_,r_,\[Theta]_,\[Phi]_]:=(c[[1]]*SphericalHarmonicY[1,-1, \[Theta], \[Phi]]+c[[2]]*SphericalHarmonicY[1, 0, \[Theta], \[Phi]]+c[[3]]*SphericalHarmonicY[1, 1, \[Theta], \[Phi]]);
+mr[r_,\[Theta]_,\[Phi]_]:=r*{Sin[\[Theta]]*Exp[I*\[Phi]]/Sqrt[2],Cos[\[Theta]],Sin[\[Theta]]*Exp[-I*\[Phi]]/Sqrt[2]};
+asyassumptions = {c0>0, \[Theta]1>0, \[Phi]>0, \[Phi]1>0, r>0, \[Theta]d>0, \[Theta]a>0}
+Print["contribution from Y00 = ", Integrate[Integrate[SphericalHarmonicY[0,0, \[Theta], \[Phi]]*Sin[\[Theta]]*(nr[\[Theta]n,\[Phi]n].nr[\[Theta],\[Phi]]),{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]]
+Er[rr_,\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[Integrate[r*fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*(nr[\[Theta]n,\[Phi]n].nr[\[Theta],\[Phi]]),{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}],{r,0,R0}]/.{R0->rr, \[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
+Irplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Simplify[(Conjugate[Er[1,\[Theta],\[Phi],\[Theta]1,\[Phi]1]]*Er[1,\[Theta],\[Phi],\[Theta]1,\[Phi]1])/.{c0->1}, Assumptions->asyassumptions]
+(*How the intensity in direction detector looks like depending on rotation*)
+Animate[RevolutionPlot3D[Irplot[\[Theta],\[Phi],\[Theta]a,0],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}],{\[Theta]a,0,\[Pi]},AnimationRunning->False]
+Animate[RevolutionPlot3D[Irplot[\[Theta],\[Phi],\[Pi]/2,\[Phi]a],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}],{\[Phi]a,0,\[Pi]},AnimationRunning->False]
+
+
+
+
+
+
+
+Plot3D[Conjugate[Er[r,\[Theta],\[Phi]]]*Er[r,\[Theta],\[Phi]]*Sin[\[Theta]]/.{c0->1,c1->1,\[Phi]1->\[Pi]/2,r->1}, {\[Phi],0,2*\[Pi]},{\[Theta],0,\[Pi]/2}]
+Plot[urca\[Phi]/.{c0->0,c1->1,\[Phi]1->\[Pi]/2,r->1},{\[Phi],0,2*\[Pi]}]
+Plot[urca\[Theta]/.{c0->1,c1->1,\[Phi]1->\[Pi]/2,r->1},{\[Theta],0,\[Pi]/2}]
+urca
 
 
 
