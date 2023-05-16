@@ -451,7 +451,7 @@ Print["Product between imprecision and back action = ", Simplify[Syy\[Tau]\[Tau]
 
 
 
-(*VARIANCE operator*)
+(*DISPLACEMENT - VARIANCE operator*)
 (*radially symmetric Gaussian density distribution*)
 fgauss[x_,y_,z_,\[Sigma]_]:=\[Pi]^(-3/2)*\[Sigma]^(-3)*Exp[-(x^2+y^2+z^2)/\[Sigma]^2];
 Delfgauss[x_,y_,z_,\[Sigma]_]:= Grad[fgauss[x,y,z,\[Sigma]],{x,y,z}];
@@ -460,16 +460,46 @@ Print["fgauss = ", fgauss[x,y,z,\[Sigma]]]
 Print["normalization fgauss = ", Simplify[Integrate[Integrate[Integrate[fgauss[x,y,z,\[Sigma]],{x,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{y,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{z,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],Assumptions->{\[Sigma]>0}]];
 Print["Delfgauss = ", Delfgauss[x,y,z,\[Sigma]]]
 Print["Geometric factors fgauss = ", geofgauss[\[Theta],\[Phi],\[Sigma]]]
+
+
+(*radially symmetric Butterworth filter*)
+fbutter[x_,y_,z_,r0_,n_]:=1/(1+((x^2+y^2+z^2)/r0^2)^(n/2));
+Delfbutter[x_,y_,z_,r0_,n_]:= Evaluate[Grad[fbutter[x,y,z,r0,n],{x,y,z}]];
+Print["fbutter = ", fbutter[x,y,z,r0,n]]
+Print["Delbutter = ", Delfbutter[x,y,z,r0,n]]
+ff[r_,r0_,n_]:=Evaluate[Integrate[Sin[\[Theta]],{\[Theta],0,\[Pi]}]*Integrate[1,{\[Phi],0,2*\[Pi]}]*Integrate[r^2*fbutter[r,0,0,r0,n],r, Assumptions->{r0>0, n \[Epsilon] Integers}]];
+fbutter[r,0,0,1,10]
+ff[r,r0,n]
+Plot[fbutter[r,0,0,1,20],{r,0,3}]
+Plot[ff[r,1,10],{r,0,3}]
+Delfbutter[x,0,0,1,10]
+Plot[Delfbutter[x,0,0,1,10][[1]],{x,0,3}]
+Plot[Evaluate[(Limit[ff[r,r0,5],{r->Infinity}]-ff[100*r0,r0,5])/(Limit[ff[r,r0,5],{r->Infinity}]+ff[100*r0,r0,5])],{r0,0.1,10}]
+
+
+Plot[{ff[100,1,n],ff[200,2,n]/2^3},{n,3,300}]
+N[ff[100,1,1000]]*3/(4*\[Pi])
+Limit[ff[100,1,n],n->Infinity]
+(*Print["normalization fbutter = ", Simplify[Integrate[Integrate[Integrate[fbutter[x,y,z,r0,n],{x,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{y,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],{z,-Infinity,Infinity}, Assumptions->{Re[\[Sigma]^2]>0}],Assumptions->{\[Sigma]>0}]];
+Print["Delfgauss = ", Delfgauss[x,y,z,\[Sigma]]]
+Print["Geometric factors fgauss = ", geofgauss[\[Theta],\[Phi],\[Sigma]]]*)
 (*nr[\[Theta],\[Phi]]
 Integrate[Integrate[Integrate[fgauss[x,y,z,\[Sigma]],{x,-Infinity,Infinity}],{y,-Infinity,Infinity}],{z,-Infinity,Infinity}]
 *)
 
 
+Integrate[Delfbutter[x,0,0,1,10]*(nr[\[Theta],\[Phi]].{x,y,z}),{x,-Infinity,Infinity}, Assumptions->{n>1}]
 
-(*Asymmetries*)
+
+Limit[Integrate[Delfbutter[x,0,0,1,n]*(nr[\[Theta],\[Phi]].{x,y,z}),{x,-Infinity,Infinity}, Assumptions->{n>1}],n->Infinity]
+Delfbutter[x,y,z,1,n]*(nr[\[Theta],\[Phi]].{x,y,z})
+Integrate[Delfbutter[x,y,z,1,n]*(nr[\[Theta],\[Phi]].{x,y,z}),{y,-Infinity,Infinity}, Assumptions->{n>1}]
+
+
+(*Asymmetries - ROTATION*)
 fr[c_,r_,\[Theta]_,\[Phi]_]:=(c[[1]]*SphericalHarmonicY[1,-1, \[Theta], \[Phi]]+c[[2]]*SphericalHarmonicY[1, 0, \[Theta], \[Phi]]+c[[3]]*SphericalHarmonicY[1, 1, \[Theta], \[Phi]]);
 mr[r_,\[Theta]_,\[Phi]_]:=r*{Sin[\[Theta]]*Exp[I*\[Phi]]/Sqrt[2],Cos[\[Theta]],Sin[\[Theta]]*Exp[-I*\[Phi]]/Sqrt[2]};
-asyassumptions = {c0>0, \[Theta]1>0, \[Phi]>0, \[Phi]1>0, r>0, \[Theta]d>0, \[Theta]a>0}
+asyassumptions = {c0>0, \[Theta]1>0, \[Phi]>0, \[Phi]1>0, r>0, \[Theta]d>0, \[Theta]a>0, \[Theta]>0}
 Print["contribution from Y00 = ", Integrate[Integrate[SphericalHarmonicY[0,0, \[Theta], \[Phi]]*Sin[\[Theta]]*(nr[\[Theta]n,\[Phi]n].nr[\[Theta],\[Phi]]),{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]]
 Er[rr_,\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[Integrate[r*fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*(nr[\[Theta]n,\[Phi]n].nr[\[Theta],\[Phi]]),{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}],{r,0,R0}]/.{R0->rr, \[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
 Irplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Simplify[(Conjugate[Er[1,\[Theta],\[Phi],\[Theta]1,\[Phi]1]]*Er[1,\[Theta],\[Phi],\[Theta]1,\[Phi]1])/.{c0->1}, Assumptions->asyassumptions]
@@ -481,12 +511,22 @@ Animate[RevolutionPlot3D[Irplot[\[Theta],\[Phi],\[Pi]/2,\[Phi]a],{\[Theta],0,\[P
 
 
 
+Irplot[\[Theta],\[Phi],\[Theta]a,0]
 
+Ir\[Phi][\[Theta]_,\[Phi]_,\[Phi]1_]:=Evaluate[Simplify[Irplot[\[Theta],\[Phi],\[Pi]/2,\[Phi]1],Assumptions->asyassumptions]];
+Ir\[Phi]prj[\[Theta]_,\[Phi]_,\[Phi]1_]:=Ir\[Phi][\[Theta],\[Phi],\[Phi]1]*Ir\[Phi][\[Theta],\[Phi],0];
+Integrate[Integrate[Ir\[Phi]prj[\[Theta],\[Phi],\[Phi]1]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
+Ir\[Theta][\[Theta]_,\[Phi]_,\[Theta]1_]:=Evaluate[Simplify[Irplot[\[Theta],\[Phi],\[Theta]1,0],Assumptions->asyassumptions]];
+Ir\[Theta]prj[\[Theta]_,\[Phi]_,\[Theta]1_]:=Ir\[Theta][\[Theta],\[Phi],\[Theta]1]*Ir\[Theta][\[Theta],\[Phi],0];
+Integrate[Integrate[Ir\[Theta]prj[\[Theta],\[Phi],\[Theta]1]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
 
-Plot3D[Conjugate[Er[r,\[Theta],\[Phi]]]*Er[r,\[Theta],\[Phi]]*Sin[\[Theta]]/.{c0->1,c1->1,\[Phi]1->\[Pi]/2,r->1}, {\[Phi],0,2*\[Pi]},{\[Theta],0,\[Pi]/2}]
-Plot[urca\[Phi]/.{c0->0,c1->1,\[Phi]1->\[Pi]/2,r->1},{\[Phi],0,2*\[Pi]}]
-Plot[urca\[Theta]/.{c0->1,c1->1,\[Phi]1->\[Pi]/2,r->1},{\[Theta],0,\[Pi]/2}]
-urca
+uuu = Simplify[Integrate[Irplot[\[Theta],\[Phi],\[Theta]1,0],{\[Phi],0,2*\[Pi]}],Assumptions->asyassumptions]
+Plot[uuu/.{\[Theta]1->\[Pi]/2},{\[Theta],0,\[Pi]}]
+
+Ir\[Theta][\[Theta]_,\[Phi]_,\[Theta]1_]:=Evaluate[Simplify[Irplot[\[Theta],\[Phi],\[Pi]/2,\[Phi]1],Assumptions->asyassumptions]];
+Ir
+Integrate[Integrate[Ir\[Phi][\[Theta],\[Phi],\[Phi]1]*Sin[\[Theta]],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
+
 
 
 
