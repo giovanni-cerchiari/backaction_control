@@ -328,13 +328,13 @@ Print["differential imprecision"]
 Print["smirror = ", smirror[\[Theta],\[Phi],\[Pi]/2,0,\[Theta]0,\[Phi]0]]
 Print[""]
 Print["Total imprecision \[Theta]0=0"]
-Print["Smirror(\[Theta]0=0)= ", FullSimplify[Smirror[\[Theta]D,\[Pi]/2,0,0,0]]]
+Print["Smirror(\[Theta]0=0)= ", FullSimplify[Smirror[\[Theta]D,0,0]]]
 Print[""]
 Print["Total imprecision \[Theta]0=\[Pi]/2"]
-Print["Smirror(\[Theta]0=\[Pi]/2)= ", FullSimplify[Smirror[\[Theta]D,\[Pi]/2,0,\[Pi]/2,\[Phi]0]]]
+Print["Smirror(\[Theta]0=\[Pi]/2)= ", FullSimplify[Smirror[\[Theta]D,\[Pi]/2,\[Phi]0]]]
 Print[""]
 Print["Total imprecision \[Theta]D=\[Pi]/2"]
-Print["Smirror(\[Theta]=\[Pi]/2)= ", FullSimplify[Smirror[\[Pi]/2,\[Pi]/2,0,\[Theta]0,\[Phi]0]]]
+Print["Smirror(\[Theta]=\[Pi]/2)= ", FullSimplify[Smirror[\[Pi]/2,\[Theta]0,\[Phi]0]]]
 Print[""]
 Print["SmirrorQPD =", SmirrorQPD[\[Theta],\[Theta]0,\[Phi]0]]
 (*----------------------------------------------------------------------------------------------*)
@@ -353,7 +353,7 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 
 (*----------------------------------------------------------------------------------------------*)
 (*----------------------------------------------------------------------------------------------*)
-(*DISPLACEMENT - VARIANCE operator*)
+(*Asymmetries - DISPLACEMENT - VARIANCE operator*)
 (*radially symmetric Gaussian density distribution*)
 fgauss[x_,y_,z_,\[Sigma]_]:=\[Rho]*Exp[-(x^2+y^2+z^2)/\[Sigma]^2];
 (*Gradient in cartesian coordinates*)
@@ -369,7 +369,7 @@ Print["Geometric factors fgauss = ", geofgauss[\[Theta],\[Phi],\[Sigma]]]
 (*radially symmetric homogenous density*)
 fsphere[r_,r0_]:=\[Rho]*HeavisideTheta[r0-r];
 (*Gradient in spherical coordinates*)
-Delfsphere[r_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[D[fsphere[r,r0],{r,1}]*nr[\[Theta],\[Phi]]];
+Delsphere[r_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[D[fsphere[r,r0],{r,1}]*nr[\[Theta],\[Phi]]];
 (*Geometric factor*)
 fgeofsphere[r0_,\[Theta]n_,\[Phi]n_]:=Evaluate[Integrate[Integrate[Integrate[r^3*Delsphere[r,\[Theta],\[Phi],r0]*Sin[\[Theta]]*(nr[\[Theta],\[Phi]].nr[\[Theta]n,\[Phi]n]),{r,0,Infinity}, Assumptions->{r0>0}],{\[Phi],0,2*\[Pi]}],{\[Theta],0,\[Pi]/2}]];
 (*---*)
@@ -412,9 +412,19 @@ Ir\[Phi][\[Theta]_,\[Phi]_,\[Phi]1_]:=Evaluate[Simplify[Irplot[\[Theta],\[Phi],\
 (*Scalar product. The phase of the reference rotation was selected to be \[Pi]/4 to simplify the calculation*)
 Ir\[Phi]prj[\[Phi]1_]:=Evaluate[Integrate[Integrate[Ir\[Phi][\[Theta],\[Phi],\[Phi]1]*Ir\[Phi][\[Theta],\[Phi],\[Pi]/4]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],0,\[Pi]/2}]];
 Print[Ir\[Phi]prj[\[Phi]1]]
-
-
+(Normal[Series[Ir\[Phi]prj[\[Phi]1],{\[Phi]1,0,2}]]-Ir\[Phi]prj[0])/\[Phi]1
+Ir\[Phi]prj[0]
 Plot[Ir\[Phi]prj[\[Phi]1],{\[Phi]1,-\[Pi],\[Pi]}]
+
+
+Ir\[Theta][\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Irplot[\[Theta],\[Phi],\[Theta]1,\[Pi]/2],Assumptions->asyassumptions]];
+Ir\[Theta]prj[\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[Ir\[Theta][\[Theta],\[Phi],\[Theta]1,\[Phi]1]*Ir\[Theta][\[Theta],\[Phi],\[Theta]1,\[Phi]1]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],0,\[Pi]/2}]];
+Print["aiuto = ",Ir\[Theta][\[Theta],\[Phi],\[Theta]1,\[Phi]1]]
+Print[Irplot[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]
+Print["aiuto = ",Ir\[Theta]prj[\[Theta]1]]
+(Normal[Series[Ir\[Theta]prj[\[Theta]1],{\[Theta]1,0,2}]]-Ir\[Theta]prj[0])/\[Theta]1
+Ir\[Theta]prj[0]
+Plot[Ir\[Theta]prj[\[Theta]1],{\[Theta]1,0,\[Pi]}]
 
 
 
