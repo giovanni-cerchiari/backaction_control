@@ -203,9 +203,10 @@ Sbavet[\[Theta]_]:=Evaluate[Simplify[{Sba[\[Theta],\[Pi]/2,0], Sba[\[Theta],\[Pi
 Sbar[\[Theta]_,\[Theta]0_,\[Phi]0_]:=Evaluate[Simplify[2*Sba[\[Theta], \[Theta]0, \[Phi]0]/Sba[\[Pi], 0, 0]]];
 Sbarvet[\[Theta]_]:=Evaluate[Simplify[{Sbar[\[Theta],\[Pi]/2,0], Sbar[\[Theta],\[Pi]/2,\[Pi]/2], Sbar[\[Theta],0,0]}]];
 (*Print*)
-Print["BackAction(x, free space) = ", Sbavet[\[Theta]][[1]]]
-Print["BackAction(y, free space) = ", Sbavet[\[Theta]][[2]]]
-Print["BackAction(z, free space) = ", Sbavet[\[Theta]][[3]]]
+Print["power spectral density fluctuation of the radiation pressure force = ", dsba[\[Theta],\[Phi],\[Theta]p,\[Phi]p,\[Theta]0,\[Phi]0]]
+Print["BackAction(x, free space) = ", Sbavet[\[Pi]][[1]]]
+Print["BackAction(y, free space) = ", Sbavet[\[Pi]][[2]]]
+Print["BackAction(z, free space) = ", Sbavet[\[Pi]][[3]]]
 Print["BackAction(x,controlled/free) = ", Sbarvet[\[Theta]][[1]]]
 Print["BackAction(y,controlled/free) = ", Sbarvet[\[Theta]][[2]]]
 Print["BackAction(z,controlled/free) = ", Sbarvet[\[Theta]][[3]]]
@@ -284,6 +285,9 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->basupplinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+
+
+
 
 
 
