@@ -132,19 +132,45 @@ asyassumptions = {c0>0, \[Theta]1>0, \[Phi]>0, \[Phi]1>0, r>0, \[Theta]d>0, \[Th
 Print["---------------------------"]
 (*Show that the zero order of the expansion of the object's shape does not contribute*)
 Print["---------------------------"]
-xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["(P2-P4)/P2",Bold,Black,lgdfontsize]};
-pltlgdxyz={Style["object",Black,lgdfontsize], Style["symmetric",Black,lgdfontsize], Style["antisym.",Black,lgdfontsize]};
 Print["Assymetric shape"]
-asycoeff = 0.2;
+asycoeff = 0.3;
 Print["Assymetric shape oriented on y-axis 3D plot"]
-SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+infoarrowl = 0.25;
+infoarrowdia = 0.003;
+infoarrowtip = 0.05;
+aryx2=Graphics3D[{Red,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,0},{0.8*infoarrowl,0,0}},infoarrowdia]]}]
+aryy2=Graphics3D[{Green,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,0},{0,0.8*infoarrowl,0}},infoarrowdia]]}]
+aryz2=Graphics3D[{Blue,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,-1.3*infoarrowl},{0,0,infoarrowl}},infoarrowdia]]}]
+sinusplt2 = ParametricPlot3D[{0.2*Sin[(2*\[Pi]/0.25)*u], u, 0}, {u, -0.4, 0.23}, PlotStyle->Red]
+objx = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
  ColorFunction -> (ColorData["Rainbow"][#6] &)]
+objy = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+ ColorFunction -> (ColorData["Rainbow"][#6] &)]
+objz = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,0,0],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+ ColorFunction -> (ColorData["Rainbow"][#6] &)]
+viewvectorplt2l = {0,0,0}
+viewvectorplt2r = 0.4*{0.7,1.3,-0.8}
+Show[aryx2,aryy2,aryz2, sinusplt2, objx,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+Show[aryx2,aryy2,aryz2, sinusplt2, objy,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+Show[aryx2,aryy2,aryz2, sinusplt2, objz,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+
+ 
+
+
 Print["---------------------------"]
 Print["Assymetric shape oriented on y-axis"]
+pltlgdxyz={"object", "symmetric", "antisym.", "image"};
+xylabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize]};
 PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]],
-(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]]},{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}},
-AxesLabel -> xylabl, PlotLegend->pltlgdxyz. Axes -> True, Frame->frameflg]
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,3*\[Pi]/2],1,\[Pi]/2,\[Phi]]},
+{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
 Print["Assymetric shape oriented in the xy-plane and rotating about the z axis"]
+PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]],1,\[Pi]/2,\[Phi]]},
+{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
 Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]]},{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}],{\[Phi]1,0,2*\[Pi]}]
 Print["Assymetric shape oriented in the yz-plane and rotating about the x axis"]
