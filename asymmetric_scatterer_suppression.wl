@@ -219,9 +219,6 @@ Izrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pzdetas[\[Thet
 
 Print["Power emitted by asymmetric object: ", FullSimplify[Pxdetas[\[Theta],\[Phi],\[Pi]/2,\[Pi]/2],Assumptions->{\[Theta]>0,\[Phi]>0}]]
 
-SphericalPlot3D[Ixrplot[\[Theta],\[Phi],0,0],{\[Theta],0,\[Pi]},{\[Phi],0,2\[Pi]},PlotRange->Full]
-SphericalPlot3D[Izrplot[\[Theta],\[Phi],0,0],{\[Theta],0,\[Pi]},{\[Phi],0,2\[Pi]},PlotRange->Full]
-
 (*How the intensity in the direction of the detector looks like depending on rotation*)
 (*----------------*)
 (*-----PLOTS - Asymmetries - ROTATION----------*)
