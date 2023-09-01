@@ -104,12 +104,12 @@ Print["Green's function control region gc = ", gc[\[Theta]k,\[Phi]k,\[Theta]0,\[
 simplfyGreenConditions={\[Lambda]>0, \[Theta]>0, \[Phi]>0, \[Phi]0>0, \[Theta]0>0, \[Phi]k>0, \[Theta]k>0, r0>0, R0>0, Rdet>0, \[Omega]>0, \[Mu]0>0};
 (*Green's functions to n-th order*)
 Print["Expanding the scalar part  of the Greens' functions in series..."]
-gmn1[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gm[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,2}]], Assumptions->simplfyGreenConditions]];
+gmn2[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gm[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,2}]], Assumptions->simplfyGreenConditions]];
 gmno[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gm[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,4}]], Assumptions->simplfyGreenConditions]];
-gcn1[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gc[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,2}]], Assumptions->simplfyGreenConditions]];
+gcn2[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gc[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,2}]], Assumptions->simplfyGreenConditions]];
 gcno[\[Theta]0_,\[Phi]0_,\[Theta]_,\[Phi]_,r0_]:= Evaluate[Simplify[Normal[Series[gc[\[Pi]/2,0,\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],{r0,0,4}]], Assumptions->simplfyGreenConditions]];
-Print["gm 2nd = ", FullSimplify[gmn1[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],Assumptions->simplfyGreenConditions]]
-Print["gc 2nd = ", FullSimplify[gcn1[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],Assumptions->simplfyGreenConditions]]
+Print["gm 2nd = ", FullSimplify[gmn2[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],Assumptions->simplfyGreenConditions]]
+Print["gc 2nd = ", FullSimplify[gcn2[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0],Assumptions->simplfyGreenConditions]]
 Print["... Greens' functions expanded."]
 
 
@@ -124,23 +124,36 @@ Print["... Greens' functions expanded."]
 Print["Calculating the electric field (scalar part)..."]
 Emndet[\[Theta]_,\[Phi]_,R0_]:=Evaluate[Integrate[Integrate[Integrate[gmno[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0]*r0^2*Sin[\[Theta]0],{\[Theta]0,0,\[Pi]}],{\[Phi]0,0,2*\[Pi]}],{r0,0,R0}]];
 Ecndet[\[Theta]_,\[Phi]_,R0_]:=Evaluate[Integrate[Integrate[Integrate[gcno[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0]*r0^2*Sin[\[Theta]0],{\[Theta]0,0,\[Pi]}],{\[Phi]0,0,2*\[Pi]}],{r0,0,R0}]];
+
+Em2det[\[Theta]_,\[Phi]_,R0_]:=Evaluate[Integrate[Integrate[Integrate[gmn2[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0]*r0^2*Sin[\[Theta]0],{\[Theta]0,0,\[Pi]}],{\[Phi]0,0,2*\[Pi]}],{r0,0,R0}]];
+Ec2det[\[Theta]_,\[Phi]_,R0_]:=Evaluate[Integrate[Integrate[Integrate[gcn2[\[Theta]0,\[Phi]0,\[Theta],\[Phi],r0]*r0^2*Sin[\[Theta]0],{\[Theta]0,0,\[Pi]}],{\[Phi]0,0,2*\[Pi]}],{r0,0,R0}]];
 Print["... electric field calculated"]
+
 (*The power is proportional to the square of the electric field*)
 Print["Calculating the radiated power ..."]
 (*Align polarization to the x-axis and calculating the power term deriving from Gmat.*)
 Pmat[\[Theta]_,\[Phi]_]:=(Gmat[\[Theta],\[Phi]] . {p,0,0}) . (Gmat[\[Theta],\[Phi]] . {p,0,0});
+
 (*------------------------*)
 (*Power term corresponding to the scalar integral*)
 pmndet[\[Theta]_,\[Phi]_,R0_]:= Evaluate[Simplify[Conjugate[Emndet[\[Theta],\[Phi],R0]]*Emndet[\[Theta],\[Phi],R0], Assumptions->simplfyGreenConditions]];
 pcndet[\[Theta]_,\[Phi]_,R0_]:= Evaluate[Simplify[Conjugate[Ecndet[\[Theta],\[Phi],R0]]*Ecndet[\[Theta],\[Phi],R0], Assumptions->simplfyGreenConditions]];
+pm2det[\[Theta]_,\[Phi]_,R0_]:= Evaluate[Simplify[Conjugate[Em2det[\[Theta],\[Phi],R0]]*Em2det[\[Theta],\[Phi],R0], Assumptions->simplfyGreenConditions]];
+pc2det[\[Theta]_,\[Phi]_,R0_]:= Evaluate[Simplify[Conjugate[Ec2det[\[Theta],\[Phi],R0]]*Ec2det[\[Theta],\[Phi],R0], Assumptions->simplfyGreenConditions]];
+
 (*Combining the contributions of the scalar part and the matrix part.
 Integrals of the power in the measurement region and in the control region. Warning: different domains of integration.*)
 Pmndet\[Theta][\[Theta]_,R0_]:= Evaluate[Integrate[Pmat[\[Theta],\[Phi]]*pmndet[\[Theta],\[Phi],R0]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}]];
 Pmndet[\[Theta]D_,RR0_]:=Evaluate[Simplify[Integrate[Pmndet\[Theta][\[Theta],R0],{\[Theta],0,\[Theta]D}]+Integrate[Pmndet\[Theta][\[Theta],R0],{\[Theta],\[Pi]-\[Theta]D,\[Pi]}], Assumptions->simplfyGreenConditions]/.{R0->RR0}];
 Pmndetout[\[Theta]D_,RR0_]:=Evaluate[Simplify[Integrate[Pmndet\[Theta][\[Theta],R0],{\[Theta],\[Theta]D,\[Pi]-\[Theta]D}], Assumptions->simplfyGreenConditions]/.{R0->RR0}];
+
+Pm2det\[Theta][\[Theta]_,R0_]:= Evaluate[Integrate[Pmat[\[Theta],\[Phi]]*pm2det[\[Theta],\[Phi],R0]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}]];
+Pm2det[\[Theta]D_,RR0_]:=Evaluate[Simplify[Integrate[Pm2det\[Theta][\[Theta],R0],{\[Theta],0,\[Theta]D}]+Integrate[Pm2det\[Theta][\[Theta],R0],{\[Theta],\[Pi]-\[Theta]D,\[Pi]}], Assumptions->simplfyGreenConditions]/.{R0->RR0}];
+
 Pcndet[\[Theta]D_,RR0_]:=Evaluate[Integrate[Integrate[Pmat[\[Theta],\[Phi]]*pcndet[\[Theta],\[Phi],R0]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],\[Theta]D,\[Pi]/2}]/.{R0->RR0}];
-Pc2det[\[Theta]D_,R0_]:=Evaluate[Simplify[Normal[Series[Pcndet[\[Theta]D,R0],{R0,0,10}]], Assumptions->simplfyGreenConditions]];
+Pc2det[\[Theta]D_,RR0_]:=Evaluate[Integrate[Integrate[Pmat[\[Theta],\[Phi]]*pc2det[\[Theta],\[Phi],R0]*Sin[\[Theta]],{\[Phi],0,2*\[Pi]}],{\[Theta],\[Theta]D,\[Pi]/2}]/.{R0->RR0}];
 Print["... radiated power calculated"]
+
 Print["Power in the control region 4th order : ", Pcndet[\[Theta]D,R0]]
 Print["Power in the control region 2nd order : ", Pc2det[\[Theta]D,R0]]
 Print["Power in the measurement region 2nd order : ", Pmndet[\[Theta]D,R0]]
@@ -167,7 +180,7 @@ Plot[relativeuncertainty[R0]/.plotconditions,{R0,0,0.3},PlotLegend->pltlgdxyz, L
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
 xylabl = {Style["R0/\[Lambda]",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
 pltlgdxyz={Style["full NA - 2nd order",Black,lgdfontsize],Style["full NA - 4th order",Black,lgdfontsize],Style["NA=0.4 - 2nd order",Black,lgdfontsize], Style["NA=0.4 - 4th order",Black,lgdfontsize]};
-LogPlot[{(Pc2det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,(Pc4det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},
+LogPlot[{(Pc2det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,(Pcndet[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},
      Pratio4[ArcSin[0.4],R0]/.plotconditions},{R0,0,0.3},PlotRange->{0.0001,1},PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
@@ -251,23 +264,8 @@ ssmirror[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_]:= Evaluate[FullSimplify[smirror[
 Print["detection limit x = ", Simplify[Smirrorvet[\[Theta]][[1]]*Sbavet[\[Theta]][[1]]]]
 Print["detection limit y = ", Simplify[Smirrorvet[\[Theta]][[2]]*Sbavet[\[Theta]][[2]]]]
 Print["detection limit z = ", Simplify[Smirrorvet[\[Theta]][[3]]*Sbavet[\[Theta]][[3]]]]
-<<<<<<< HEAD
-=======
 
 
-Subscript[r, 1][\[Alpha]_,d_]:={d Cos[\[Alpha]],0,d Sin[\[Alpha]]};
-Subscript[r, 2][\[Alpha]_,d_]:=-Subscript[r, 1][\[Alpha],d];
-Subscript[EF, sc,1][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Exp[(I (2 \[Pi]) nr[\[Theta],\[Phi]].Subscript[r, 1][\[Alpha],d])/\[Lambda]];
-Subscript[EF, sc,2][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Exp[(I (2 \[Pi]) nr[\[Theta],\[Phi]].Subscript[r, 2][\[Alpha],d])/\[Lambda]];
-Subscript[EF, i,1][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=-\[Rho] Conjugate[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]] Exp[-((I (2 \[Pi]) 2 R)/\[Lambda])];
-Subscript[EF, i,2][\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=-\[Rho] Conjugate[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]] Exp[-((I (2 \[Pi]) 2 R)/\[Lambda])];
-IN[\[Theta]_,\[Phi]_,\[Alpha]_,d_]:=Abs[Subscript[EF, sc,1][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, sc,2][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, i,1][\[Theta],\[Phi],\[Alpha],d]+Subscript[EF, i,2][\[Theta],\[Phi],\[Alpha],d]]^2;
-assumptions={d==1,d\[Element]Reals,0<=\[Alpha]<=2 \[Pi],\[Alpha]\[Element]Reals,Subscript[EF, o,1]\[Element]Vectors[3,Complexes],Subscript[EF, o,2]\[Element]Vectors[3,Complexes],\[Lambda]>0,\[Lambda]\[Element]Reals,0<=\[Theta]<=2 \[Pi],\[Theta]\[Element]Reals,0<=\[Phi]<=2 \[Pi],\[Phi]\[Element]Reals,R==20 d,R\[Element]Reals,\[Rho]>0,\[Rho]\[Element]Reals,Abs[Subscript[EF, 0,1]]==1,Abs[Subscript[EF, 0,2]]==1};
-Print[Evaluate[FullSimplify[IN[\[Theta],\[Phi],\[Alpha],d],Assumptions->assumptions]]]
-
-
-(*----------------------------------------------------------------------------------------------*)
->>>>>>> ba9d1919065eb487af741bfdf5af5760f2ec2ae2
 (*----------------------------------------------------------------------------------------------*)
 (*GENERAL FORMULAS FOR SELF-HOMDYNE DETECTION*)
 Print[""]
@@ -302,33 +300,7 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->basupplinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
-<<<<<<< HEAD
-=======
 
 
 (* ::InheritFromParent:: *)
 (**)
-
-
-nr[\[Theta]_,\[Phi]_]:={Cos[\[Phi]] Sin[\[Theta]],Sin[\[Phi]] Sin[\[Theta]],Cos[\[Theta]]};
-f[\[Theta]_,\[Phi]_,r_,a_,b_,\[Theta]1_,\[Phi]1_,r1_,\[Theta]2_,\[Phi]2_,r2_]:=a DiracDelta[\[Theta]-\[Theta]1] DiracDelta[\[Phi]-\[Phi]1] DiracDelta[r-r1]+b DiracDelta[\[Theta]-\[Theta]2] DiracDelta[\[Phi]-\[Phi]2] DiracDelta[r-r2];
-g[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_]:=Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[(I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda]];
-gi[\[Theta]_,\[Phi]_,\[Theta]0_,\[Phi]0_,r0_,\[Theta]k_,\[Phi]k_,\[Rho]_,R_]:=-\[Rho] Exp[(I r0 (2 \[Pi]) nr[\[Theta]k,\[Phi]k].nr[\[Theta]0,\[Phi]0])/\[Lambda]] Exp[-((I r0 (2 \[Pi]) nr[\[Theta],\[Phi]].nr[\[Theta]0,\[Phi]0])/\[Lambda])-(I 2 (2 \[Pi]) R)/\[Lambda]];
-assump={k\[Element]Reals,k>0,0<\[Theta]k<\[Pi],0<\[Phi]k<2 \[Pi],R\[Element]Reals,R>0,\[Rho]\[Element]Reals,\[Rho]>0,\[Lambda]\[Element]Reals,\[Lambda]>0,x0\[Element]Reals,x0>0,y\[Element]Reals,z\[Element]Reals,\[CapitalDelta]\[Element]Reals,x0>\[CapitalDelta]>0,0<=\[Theta]<\[Pi],0<\[Phi]<=2 \[Pi],r0>0,n>0,n\[Element]Integers,0<\[Epsilon]<\[Pi],Cos[\[Phi]]\[Element]Reals};
-gb[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0,x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0,x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
-gm=Simplify[Normal[Series[gb[\[Theta],\[Phi],x0,\[CapitalDelta],R],{x0,0,2}]],Assumptions->assump];
-Ef[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=gb[\[Theta],\[Phi],x0,\[CapitalDelta],R];
-Print["Electric field E(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]];
-Int[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_]:=FullSimplify[ComplexExpand[Conjugate[Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]] Ef[\[Theta],\[Phi],x0,\[CapitalDelta],R]],Assumptions->assump];
-Print["Intensity I(\[Theta],\[Phi],\!\(\*SubscriptBox[\(x\), \(0\)]\),\[CapitalDelta]) \[Proportional] ",Int[\[Theta],\[Phi],x0,\[CapitalDelta],1]];
-
-
-gbRot[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[g[\[Theta],\[Phi],\[Pi]/2,0+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0] (x0+\[CapitalDelta])^2+g[\[Theta],\[Phi],\[Pi]/2,\[Pi]-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0] (x0-\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,\[Pi]+\[Epsilon],x0+\[CapitalDelta],\[Pi]/2,0,1,R] (x0+\[CapitalDelta])^2+gi[\[Theta],\[Phi],\[Pi]/2,0-\[Epsilon],x0-\[CapitalDelta],\[Pi]/2,0,1,R] (x0-\[CapitalDelta])^2];
-gbRotFirst[\[Theta]_,\[Phi]_,x0_,\[CapitalDelta]_,R_,\[Epsilon]_]:=Simplify[Normal[Series[gbRot[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]],{\[Epsilon],0,1}]]];
-Print["Green's function \!\(\*SubscriptBox[\(g\), \(rot\)]\)(\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]) = ",gbRotFirst[\[Theta],\[Phi],x0,\[CapitalDelta],R,\[Epsilon]]];
-IntRot[\[Theta]_,\[Phi]_,\[CapitalDelta]_,\[Epsilon]_]:=Simplify[ComplexExpand[Conjugate[gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21 \[Lambda],\[Epsilon]]] gbRot[\[Theta],\[Phi],\[Lambda]/2,\[CapitalDelta],21 \[Lambda],\[Epsilon]]],Assumptions->assump];
-Print["Intensity for rotated non symmetric object I(\[Theta],\[Phi],x0,\[CapitalDelta],\[Epsilon]) \[Proportional] ", IntRot[\[Theta],\[Phi],\[CapitalDelta],\[Epsilon]]];
-
-
-
->>>>>>> ba9d1919065eb487af741bfdf5af5760f2ec2ae2
