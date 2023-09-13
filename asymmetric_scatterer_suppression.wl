@@ -1,7 +1,8 @@
 (* ::Package:: *)
 
 (*
-Copyright: Giovanni Cerchiari, Yannick Weiser
+Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
+           Lorenz Panzl, Thomas Lafenthaler
 e-mail: giovanni.cerchiari@uibk.ac.at
 date : 08/2022
 *)
@@ -27,8 +28,6 @@ the results presented in the article:
 If you wish to cite this work, we prepared a citation file "selective_suppression.bib"
 in bibtex format in the repository.
 
-This file was modified from 
-doi: 10.5281/zenodo.4545692
 *)
 (*
 -----------------------------------------------------------------------
@@ -127,10 +126,61 @@ Print["Geometric factor fsphere = ", fgeofspherescalar[r0], MatrixForm[FullSimpl
 (*Approximating asymmetries with spherical harmonics*)
 fr[c_,r_,\[Theta]_,\[Phi]_]:=(2*Sqrt[\[Pi]])^(-1) *(c[[1]]*SphericalHarmonicY[1,-1, \[Theta], \[Phi]]+c[[2]]*SphericalHarmonicY[1, 0, \[Theta], \[Phi]]+c[[3]]*SphericalHarmonicY[1, 1, \[Theta], \[Phi]]);
 (*Radial vector in the spherical harmonics basis*)
-mr[r_,\[Theta]_,\[Phi]_]:=r*{Sin[\[Theta]]*Exp[I*\[Phi]]/Sqrt[2],Cos[\[Theta]],Sin[\[Theta]]*Exp[-I*\[Phi]]/Sqrt[2]};
+mr[r_,\[Theta]_,\[Phi]_]:=r*{Sin[\[Theta]]*Exp[I*\[Phi]]/Sqrt[2],Cos[\[Theta]],-Sin[\[Theta]]*Exp[-I*\[Phi]]/Sqrt[2]};
 (*assumptions for integrals*)
 asyassumptions = {c0>0, \[Theta]1>0, \[Phi]>0, \[Phi]1>0, r>0, \[Theta]d>0, \[Theta]a>0, \[Theta]>0, p>0, \[Mu]0>0, Rdet>0, \[Omega]>0, \[Rho]>0, \[Epsilon]0>1, \[Lambda]>0};
+Print["---------------------------"]
 (*Show that the zero order of the expansion of the object's shape does not contribute*)
+Print["---------------------------"]
+Print["Assymetric shape"]
+asycoeff = 0.3;
+Print["Assymetric shape oriented on y-axis 3D plot"]
+infoarrowl = 0.25;
+infoarrowdia = 0.003;
+infoarrowtip = 0.05;
+aryx2=Graphics3D[{Red,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,0},{0.8*infoarrowl,0,0}},infoarrowdia]]}]
+aryy2=Graphics3D[{Green,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,0},{0,0.8*infoarrowl,0}},infoarrowdia]]}]
+aryz2=Graphics3D[{Blue,Arrowheads[infoarrowtip],Arrow[Tube[{{0,0,-1.3*infoarrowl},{0,0,infoarrowl}},infoarrowdia]]}]
+sinusplt2 = ParametricPlot3D[{0.2*Sin[(2*\[Pi]/0.25)*u], u, 0}, {u, -0.4, 0.23}, PlotStyle->Red]
+objx = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+ ColorFunction -> (ColorData["Rainbow"][#6] &)]
+objy = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+ ColorFunction -> (ColorData["Rainbow"][#6] &)]
+objz = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,0,0],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
+ ColorFunction -> (ColorData["Rainbow"][#6] &)]
+viewvectorplt2l = {0,0,0}
+viewvectorplt2r = 0.4*{0.7,1.3,-0.8}
+Show[aryx2,aryy2,aryz2, sinusplt2, objx,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+Show[aryx2,aryy2,aryz2, sinusplt2, objy,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+Show[aryx2,aryy2,aryz2, sinusplt2, objz,
+ ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
+
+ 
+
+
+Print["---------------------------"]
+Print["Assymetric shape oriented on y-axis"]
+pltlgdxyz={"object", "symmetric", "antisym.", "image"};
+xylabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize]};
+PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,3*\[Pi]/2],1,\[Pi]/2,\[Phi]]},
+{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
+Print["Assymetric shape oriented in the xy-plane and rotating about the z axis"]
+PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]],1,\[Pi]/2,\[Phi]]},
+{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
+Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]]},{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}],{\[Phi]1,0,2*\[Pi]}]
+Print["Assymetric shape oriented in the yz-plane and rotating about the x axis"]
+Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], 0], fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Theta],0],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], 0]+fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Theta],0]},{\[Theta],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}],{\[Phi]1,0,2*\[Pi]}]
+Print["---------------------------"]
+
+
+
+
 Print["contribution from Y00 = ", Integrate[Integrate[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]*Sin[\[Theta]]*gcn1[\[Theta]0,\[Phi]0,\[Theta],\[Phi],1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]]
 (*Scattered electric field*)
 Ersc[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*gcn1[\[Theta]n,\[Phi]n,\[Theta],\[Phi],1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]/.{\[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
