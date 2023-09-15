@@ -180,24 +180,27 @@ Plot[relativeuncertainty[R0]/.plotconditions,{R0,0,0.3},PlotLegend->pltlgdxyz, L
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
 xylabl = {Style["R0/\[Lambda]",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
 pltlgdxyz={Style["full NA - 2nd order",Black,lgdfontsize],Style["full NA - 4th order",Black,lgdfontsize],Style["NA=0.4 - 2nd order",Black,lgdfontsize], Style["NA=0.4 - 4th order",Black,lgdfontsize]};
-LogPlot[{(Pc2det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,(Pcndet[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},
+radius = LogPlot[{(Pc2det[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,(Pcndet[ArcSin[0],R0]/Pm2det[ArcSin[1],R0])/.plotconditions,Pratio2[ArcSin[0.4],R0]/.{\[Lambda]->1},
      Pratio4[ArcSin[0.4],R0]/.plotconditions},{R0,0,0.3},PlotRange->{0.0001,1},PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
-	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White,AspectRatio->1.84295612]
 xylabl = {Style["NA",Bold,Black,lgdfontsize],Style["Pc/Pm",Bold,Black,lgdfontsize]};
 pltlgdxyz={Style["\[Lambda]/10 - 2nd order",Black,lgdfontsize],Style["\[Lambda]/10 - 4th order",Black,lgdfontsize],Style["\[Lambda]/5 - 2nd order",Black,lgdfontsize],Style["\[Lambda]/5 - 4th order",Black,lgdfontsize]};
-LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.plotconditions,Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio2[ArcSin[NA],\[Lambda]/5]/.plotconditions,Pratio4[ArcSin[NA],\[Lambda]/5]/.plotconditions},{NA,0,1},
+na = LogPlot[{Pratio2[ArcSin[NA],\[Lambda]/10]/.plotconditions,Pratio4[ArcSin[NA],\[Lambda]/10]/.{\[Lambda]->1},Pratio2[ArcSin[NA],\[Lambda]/5]/.plotconditions,Pratio4[ArcSin[NA],\[Lambda]/5]/.plotconditions},{NA,0,1},
     PlotRange->{0.001,1},PlotLegend->pltlgdxyz,
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->xyzlinestyle, BaseStyle->{FontSize->16},
-	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White,AspectRatio->1.84295612]
 Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/10]/.plotconditions]]]
 Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/10 (next to leading order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/10]/.plotconditions]]]
 Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2[ArcSin[0.4],\[Lambda]/5]/.plotconditions]]]
 Print["scattered power ratio at conditions: with mirror, NA=0.4, R0=\[Lambda]/5  (next to leading order) = ", N[Simplify[Pratio4[ArcSin[0.4],\[Lambda]/5]/.plotconditions]]]
 Print["scattered power ratio at conditions: without mirror, NA=0.4, R0=\[Lambda]/10 (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/10]/.plotconditions]]]
 Print["scattered power ratio at conditions: without mirror, NA=0.4, R0=\[Lambda]/5  (2nd order) = ", N[Simplify[Pratio2out[ArcSin[0.4],\[Lambda]/5]/.plotconditions]]]
+
+
+Show[radius]
 
 
 (*----------------------------------------------------------------------------------------------*)

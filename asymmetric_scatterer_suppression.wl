@@ -137,7 +137,7 @@ Print["---------------------------"]
 (*Show that the zero order of the expansion of the object's shape does not contribute*)
 Print["---------------------------"]
 Print["Asymmetric shape"]
-asycoeff = 0.5;
+asycoeff = 0.3;
 Print["Asymmetric shape oriented on y-axis 3D plot"]
 
 infoarrowl = 0.25;
@@ -204,7 +204,7 @@ Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], 0], fr
 
 Print["contribution from Y00 = ", Integrate[Integrate[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]*Sin[\[Theta]]*gcn1[\[Theta]0,\[Phi]0,\[Theta],\[Phi],1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]]
 (*Scattered electric field*)
-(*Ersc1[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*gcn1[\[Theta],\[Phi],\[Theta]n,\[Phi]n,1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]/.{\[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];*)
+Ersc1[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*gcn1[\[Theta],\[Phi],\[Theta]n,\[Phi]n,1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]/.{\[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
 Ersc[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[4*Integrate[Integrate[Integrate[fr[mr[c0,\[Theta]1,\[Phi]1],r0,\[Theta],\[Phi]]*r0^2*Sin[\[Theta]]*gcn1[\[Theta],\[Phi],\[Theta]n,\[Phi]n,r0],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}],{r0,0,1}]/.{\[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
 Erxmat[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=(Gmat[\[Theta]\[Theta],\[Phi]\[Phi]] . {-I*\[Omega]*p,0,0});
 Erzmat[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=(Gmat[\[Theta]\[Theta],\[Phi]\[Phi]] . {0,0,-I*\[Omega]*p});
@@ -212,10 +212,10 @@ Erx[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erxmat[\[Theta]\[Theta
 Erz[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erzmat[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1]*Ersc[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1];
 
 (*Detected intensity by a differential pixel detector occupying the emtpy half-sphere*)
-Pxdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]] . Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
-Ixrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pxdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->0.5, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
-Pzdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]] . Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
-Izrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pzdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->0.5, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
+Pxdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=1/(c*2*\[Mu]0)*Evaluate[Simplify[(Conjugate[Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]] . Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
+Ixrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pxdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->0.3, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1, c->1}]];
+Pzdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=1/(c*2*\[Mu]0)*Evaluate[Simplify[(Conjugate[Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]] . Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
+Izrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pzdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->0.3, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1, c->1}]];
 
 Print["Power emitted by asymmetric object: ", FullSimplify[Pxdetas[\[Theta],\[Phi],\[Pi]/2,\[Pi]/2],Assumptions->{\[Theta]>0,\[Phi]>0}]]
 
@@ -253,19 +253,8 @@ Print["z-polarized light = ", FullSimplify[Pzdetas[\[Theta],\[Phi],\[Pi]/2,\[Phi
 anizz = Animate[RevolutionPlot3D[Izrplot[\[Theta],\[Phi],\[Pi]/2,\[Phi]a],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}, AxesLabel ->xyzlabl],{\[Phi]a,0,\[Pi]},AnimationRunning->False]
 
 
-c1
-\[Theta]1
-\[Phi]1
-SphericalHarmonicY[0,0, \[Theta], \[Phi]]
-fr[mr[c1,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]
-Integrate[Integrate[Sin[\[Theta]]*((2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[c1,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]),{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
-Pxdetas[\[Theta],\[Phi],\[Theta]a,\[Pi]/2]
-Ixrplot[\[Theta],\[Phi],\[Theta]a,\[Pi]/2]
-
-Integrate[Integrate[Sin[\[Theta]]*SphericalHarmonicY[0,0, \[Theta], \[Phi]]^2,{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
-Integrate[Integrate[Sin[\[Theta]]*SphericalHarmonicY[1,0, \[Theta], \[Phi]]^2,{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]
-
 FullSimplify[Simplify[(Conjugate[Ersc[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]*Ersc[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]]
+FullSimplify[Simplify[(Conjugate[Ersc1[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]*Ersc1[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]]
 
 
 Ersc1[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[Integrate[fr[mr[c0,\[Theta]1,\[Phi]1],r,\[Theta],\[Phi]]*Sin[\[Theta]]*gcn1[\[Theta],\[Phi],\[Theta]n,\[Phi]n,1],{\[Theta],0,\[Pi]}],{\[Phi],0,2*\[Pi]}]/.{\[Theta]n->\[Theta]\[Theta], \[Phi]n->\[Phi]\[Phi]}];
@@ -273,6 +262,9 @@ Ersc2[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[I
 
 Print[FullSimplify[Ersc1[\[Theta]t,\[Phi]t,\[Theta],\[Phi]],Assumptions->{\[Theta]t>0,\[Phi]t>0,\[Theta]>0,\[Phi]>0}]]
 Print[FullSimplify[4*Ersc2[\[Theta]t,\[Phi]t,\[Theta],\[Phi]],Assumptions->{\[Theta]t>0,\[Phi]t>0,\[Theta]>0,\[Phi]>0}]]
+
+
+
 
 
 
