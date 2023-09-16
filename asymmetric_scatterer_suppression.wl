@@ -235,4 +235,27 @@ Integrate[Integrate[Sin[\[Theta]]*SphericalHarmonicY[1,0, \[Theta], \[Phi]]^2,{\
 FullSimplify[Simplify[(Conjugate[Ersc[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]*Ersc[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]]
 
 
+
+
+
+(*------------------------------------------*)
+(*Total radiated power*)
+Ptotx = Integrate[Integrate[Sin[\[Theta]]*Pxdetas[\[Theta],\[Phi],\[Pi]/2,0],{\[Phi],0,2*\[Pi]},Assumptions->asyassumptions],{\[Theta],0,\[Theta]d},Assumptions->asyassumptions]
+Ptoty = Integrate[Integrate[Sin[\[Theta]]*Pxdetas[\[Theta],\[Phi],\[Pi]/2,\[Pi]/2],{\[Phi],0,2*\[Pi]},Assumptions->asyassumptions],{\[Theta],0,\[Theta]d},Assumptions->asyassumptions]
+Ptotz = Integrate[Integrate[Sin[\[Theta]]*Pxdetas[\[Theta],\[Phi],0,0],{\[Phi],0,2*\[Pi]},Assumptions->asyassumptions],{\[Theta],0,\[Theta]d},Assumptions->asyassumptions]
+Px=Ptotx/.{\[Theta]d->\[Pi]/2}
+Py=Ptoty/.{\[Theta]d->\[Pi]/2}
+Pz=Ptotz/.{\[Theta]d->\[Pi]/2}
+(*-------------------------------------------*)
+(*Total power ratios*)
+Print["Px/Py = ", FullSimplify[Px/Py]]
+Print["Px/Pz = ", FullSimplify[Px/Pz]]
+Print["Py/Pz = ", FullSimplify[Py/Pz]]
+(*--------------------------------------------*)
+(*Ration between power in NA=0.4 and total radiated power*)
+Print["Px(0.4)/Px(1) = ", FullSimplify[(Ptotx/.{\[Theta]d->ArcSin[0.4]})/(Ptotx/.{\[Theta]d->\[Pi]/2})]]
+Print["Py(0.4)/Py(1) = ", FullSimplify[(Ptoty/.{\[Theta]d->ArcSin[0.4]})/(Ptoty/.{\[Theta]d->\[Pi]/2})]]
+Print["Pz(0.4)/Pz(1) = ", FullSimplify[(Ptotz/.{\[Theta]d->ArcSin[0.4]})/(Ptotz/.{\[Theta]d->\[Pi]/2})]]
+
+
 SphericalHarmonicY[0,0, \[Theta], \[Phi]]
