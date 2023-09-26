@@ -2,7 +2,12 @@
 
 (*
 <<<<<<< HEAD
+<<<<<<< HEAD
 Copyright: Giovanni Cerchiari, Tommaso Faorlin, Yannick Weiser
+=======
+Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
+           Lorenz Panzl, Thomas Lafenthaler
+>>>>>>> 6a4d56adc894e1c733b050df6a32ffbbf98c3554
 =======
 Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
            Lorenz Panzl, Thomas Lafenthaler
