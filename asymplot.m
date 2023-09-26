@@ -1,6 +1,6 @@
 
-% Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
-%            Thomas Lafenthaler
+% Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
+                        Lorenz Panzl, Thomas Lafenthaler
 %
 % e-mail: giovanni.cerchiari@uibk.ac.at
 % date : 08/2023
