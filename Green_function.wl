@@ -1,7 +1,12 @@
 (* ::Package:: *)
 
 (*
+<<<<<<< HEAD
 Copyright: Giovanni Cerchiari, Tommaso Faorlin, Yannick Weiser
+=======
+Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
+           Lorenz Panzl, Thomas Lafenthaler
+>>>>>>> 6a4d56adc894e1c733b050df6a32ffbbf98c3554
 e-mail: giovanni.cerchiari@uibk.ac.at
 date : 08/2023
 *)
@@ -37,8 +42,8 @@ dist[x_,y_,z_,x0_,y0_,z0_]:=Sqrt[(x-x0)^2+(y-y0)^2+(z-z0)^2];
 (*Cartesian to spherical coordinates transformation direct and inverse.
 These are used often because distances and gradient for this problem have easier formulas in Cartesia coordinates,
 but the Series expansion depends on the radii.*)
-(*Direct change of coordinate*)
 
+(*Direct change of coordinate*)
 varchangextor[x_,y_,z_,r_,\[Theta]_,\[Phi]_]:={x->r*Sin[\[Theta]]*Cos[\[Phi]], y->r*Sin[\[Theta]]*Sin[\[Phi]], z->r*Cos[\[Theta]]};
 (*Inverse changes of coordinate*)
 varchange\[Theta]\[Phi]tox[r_,\[Theta]_,\[Phi]_,x_,y_,z_]:={Cos[\[Phi]]->x/(r*Sin[\[Theta]]), Sin[\[Phi]]->y/(r*Sin[\[Theta]]), Cos[\[Theta]]->z/r};
