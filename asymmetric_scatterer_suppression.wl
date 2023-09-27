@@ -159,7 +159,7 @@ objy = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[
  ColorFunction -> (ColorData["Rainbow"][#6] &)];
 objz = SphericalPlot3D[(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], \[Phi]]+fr[mr[asycoeff,0,0],1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]}, {\[Phi],0,2*\[Pi]},
  ColorFunction -> (ColorData["Rainbow"][#6] &)];
- 
+
 viewvectorplt2l = {0,0,0};
 viewvectorplt2r = 0.4*{0.7,1.3,-0.8};
 
@@ -262,9 +262,3 @@ Ersc2[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Integrate[I
 
 Print[FullSimplify[Ersc1[\[Theta]t,\[Phi]t,\[Theta],\[Phi]],Assumptions->{\[Theta]t>0,\[Phi]t>0,\[Theta]>0,\[Phi]>0}]]
 Print[FullSimplify[4*Ersc2[\[Theta]t,\[Phi]t,\[Theta],\[Phi]],Assumptions->{\[Theta]t>0,\[Phi]t>0,\[Theta]>0,\[Phi]>0}]]
-
-
-
-
-
-

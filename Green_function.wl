@@ -105,7 +105,7 @@ Gtxyz = FullSimplify[((Gt/.varchange\[Theta]\[Phi]tox[r0,\[Theta]0,\[Phi]0,x0,y0
 Gtmat2 = FullSimplify[Gtxyz/G0fxyz[k,\[Rho],\[Psi],0,0,0,x0,y0,z0]/.varchangextor[x0,y0,z0,r0,\[Theta]0,\[Phi]0]];
 (*The term with derivatives in far field is equal to
 Grad(Div(I*G0)) = G0fxyz * Gtmat2,
-but, before putting the matrix (Gtmat2) and the scalar (G0fxyz) togheter, we can consider that 
+but, before putting the matrix (Gtmat2) and the scalar (G0fxyz) togheter, we can consider that
 I * G0 = G0fxyz * IdentityMatrix[3].
 Thus, we can write the final Green function combining the matrices first:
 Gf = G0 * (I + Gtmat2/k^2)
@@ -155,5 +155,5 @@ dId\[CapitalOmega][-I*\[Omega]*p*{1,0,0},1,\[Theta],\[Phi]]
 \[Sigma]ypolplot = SphericalPlot3D[dId\[CapitalOmega][-(I*\[Omega]*p/Sqrt[2])*{1,0,I},1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]},{\[Phi],0,2*\[Pi]}];
 \[Sigma]zpolplot = SphericalPlot3D[dId\[CapitalOmega][-(I*\[Omega]*p/Sqrt[2])*{I,1,0},1,\[Theta],\[Phi]],{\[Theta],0,\[Pi]},{\[Phi],0,2*\[Pi]}];
 Grid[{{Text[Style["dp/d\[CapitalOmega]", Larger, Bold]],Text[Style["x", Larger, Bold]],Text[Style["y", Larger, Bold]], Text[Style["z", Larger, Bold]]},
-{Text[Style["\[Pi]", Larger, Bold]],\[Pi]xpolplot,\[Pi]ypolplot, \[Pi]zpolplot}, 
+{Text[Style["\[Pi]", Larger, Bold]],\[Pi]xpolplot,\[Pi]ypolplot, \[Pi]zpolplot},
 {Text[Style["\[Sigma]", Larger, Bold]],\[Sigma]xpolplot,\[Sigma]ypolplot, \[Sigma]zpolplot}}]

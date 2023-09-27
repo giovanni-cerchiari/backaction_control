@@ -28,7 +28,7 @@ the results presented in the article:
 If you wish to cite this work, we prepared a citation file "selective_suppression.bib"
 in bibtex format in the repository.
 
-This file was modified from 
+This file was modified from
 doi: 10.5281/zenodo.4545692
 *)
 (*
@@ -238,8 +238,8 @@ Print["BackAction(z,controlled/free) = ", Series[Sbarvet[\[Theta]][[3]],{\[Theta
 (*----------------------------------------------------------------------------------------------*)
 (*The label "mirror" in the names of the variables refers to the self-homodyne method*)
 (*----------------------------------------------------------------------------------------------*)
-(*The imprecision s and S are described in the article Eqs 10 and 11: 
-s = differential power spectral density of the imprecision noise associated with a differential 
+(*The imprecision s and S are described in the article Eqs 10 and 11:
+s = differential power spectral density of the imprecision noise associated with a differential
     detector under direction (\[Theta], \[Phi])
 S = integral of s in the angular integral \[Phi]=[0, 2\[Pi]] and \[Theta]=[0,\[Theta]]. Note the free parameter \[Theta].
 With SS and ss natural units are introduced*)
