@@ -165,16 +165,23 @@ Show[aryx2,aryy2,aryz2, sinusplt2, objy,
 Show[aryx2,aryy2,aryz2, sinusplt2, objz,
  ViewVector->{viewvectorplt2r,-viewvectorplt2l}, ViewVertical->{1,0,0}, PlotRange->All, Background->White]
 
- 
+pltlgdxyz={"object", "symmetric", "antisym.", "image"};
+xylabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize]};
+legends=LineLegend[{"Sphere","Asymmetry","Sphere + Asymmetry","Image of asymmetry"}];
 
 (*Asymmetry along the y axis. The entire object and the asymmetric part are plotted.*)
 Print["---------------------------"]
 Print["Assymetric shape oriented on y-axis"]
-pltlgdxyz={"object", "symmetric", "antisym.", "image"};
-xylabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize]};
 PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,3*\[Pi]/2],1,\[Pi]/2,\[Phi]]},
 {\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
+
+(*Asymmetry along the x axis. The entire object and the asymmetric part are plotted.*)
+Print["---------------------------"]
+Print["Asymmetric shape oriented on x-axis"]
+PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]],
+(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]],1,\[Pi]/2,\[Phi]]},
+{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegends->legends, Axes -> True, Frame->frameflg]
 
 (*The same objects as above, but rotating around the specified axes.*)
 Print["---------------------------"]
@@ -204,9 +211,9 @@ Erx[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erxmat[\[Theta]\[Theta
 Erz[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erzmat[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1]*Ersc[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1];
 
 (*Detected intensity by a differential pixel detector occupying the emtpy half-sphere*)
-Pxdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
+Pxdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=1/(c*2*\[Mu]0)*Evaluate[Simplify[(Conjugate[Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
 Ixrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pxdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->1, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
-Pzdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
+Pzdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=1/(c*2*\[Mu]0)*Evaluate[Simplify[(Conjugate[Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
 Izrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pzdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->1, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
 
 (*How the intensity in the direction of the detector looks like depending on rotation*)
