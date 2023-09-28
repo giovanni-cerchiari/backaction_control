@@ -260,3 +260,7 @@ Print["Ratios of powers with different NA of the hole P*(NA)/P*(NA):"]
 Print["Px(0.4)/Px(1) = ", FullSimplify[(Ptotx/.{\[Theta]d->ArcSin[0.4]})/(Ptotx/.{\[Theta]d->\[Pi]/2})]]
 Print["Py(0.4)/Py(1) = ", FullSimplify[(Ptoty/.{\[Theta]d->ArcSin[0.4]})/(Ptoty/.{\[Theta]d->\[Pi]/2})]]
 Print["Pz(0.4)/Pz(1) = ", FullSimplify[(Ptotz/.{\[Theta]d->ArcSin[0.4]})/(Ptotz/.{\[Theta]d->\[Pi]/2})]]
+
+
+
+
