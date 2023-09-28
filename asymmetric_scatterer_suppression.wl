@@ -167,7 +167,7 @@ Show[aryx2,aryy2,aryz2, sinusplt2, objz,
 
  
 
-
+(*Asymmetry along the y axis. The entire object and the asymmetric part are plotted.*)
 Print["---------------------------"]
 Print["Assymetric shape oriented on y-axis"]
 pltlgdxyz={"object", "symmetric", "antisym.", "image"};
@@ -175,12 +175,18 @@ xylabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize]};
 PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Pi]/2],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,3*\[Pi]/2],1,\[Pi]/2,\[Phi]]},
 {\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
+
+(*The same objects as above, but rotating around the specified axes.*)
+Print["---------------------------"]
 Print["Assymetric shape oriented in the xy-plane and rotating about the z axis"]
 PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,0],1,\[Pi]/2,\[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Pi]],1,\[Pi]/2,\[Phi]]},
 {\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}, AxesLabel -> xylabl, PlotLegend->pltlgdxyz, Axes -> True, Frame->frameflg]
 Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]], fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Pi]/2, \[Phi]]+fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Pi]/2,\[Phi]]},{\[Phi],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}],{\[Phi]1,0,2*\[Pi]}]
+
+(*The same objects as above, but rotating around the specified axes.*)
+Print["---------------------------"]
 Print["Assymetric shape oriented in the yz-plane and rotating about the x axis"]
 Animate[PolarPlot[{(2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], 0], fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Theta],0],
 (2*Sqrt[\[Pi]])^(-1)*SphericalHarmonicY[0,0, \[Theta], 0]+fr[mr[asycoeff,\[Pi]/2,\[Phi]1],1,\[Theta],0]},{\[Theta],0,2*\[Pi]}, PlotRange->{{-0.15,0.15},{-0.15,0.15}}],{\[Phi]1,0,2*\[Pi]}]
@@ -196,15 +202,19 @@ Erxmat[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=(Gmat[\[Theta]\[The
 Erzmat[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=(Gmat[\[Theta]\[Theta],\[Phi]\[Phi]].{0,0,-I*\[Omega]*p});
 Erx[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erxmat[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1]*Ersc[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1];
 Erz[\[Theta]\[Theta]_,\[Phi]\[Phi]_,\[Theta]1_,\[Phi]1_]:=Erzmat[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1]*Ersc[\[Theta]\[Theta],\[Phi]\[Phi],\[Theta]1,\[Phi]1];
+
 (*Detected intensity by a differential pixel detector occupying the emtpy half-sphere*)
 Pxdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erx[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
 Ixrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pxdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->1, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
 Pzdetas[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[(Conjugate[Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]].Erz[\[Theta],\[Phi],\[Theta]1,\[Phi]1]), Assumptions->asyassumptions]];
 Izrplot[\[Theta]_,\[Phi]_,\[Theta]1_,\[Phi]1_]:=Evaluate[Simplify[Pzdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]/.{c0->1, \[Lambda]->1, Rdet->1, \[Mu]0->1, \[Omega]->1, p->1}]];
+
 (*How the intensity in the direction of the detector looks like depending on rotation*)
-(*----------------*)(*-----PLOTS - Asymmetries - ROTATION----------*)
+(*----------------*)
+(*-----PLOTS - Asymmetries - ROTATION----------*)
 (*3D axes label*)
 xyzlabl = {Style["x",Bold,Black,lgdfontsize],Style["y",Bold,Black,lgdfontsize],Style["I",Bold,Black,lgdfontsize]};
+
 (*Rotations about the x-axis*)
 Print["---------------------------"]
 Print["Rotation about the x-axis"]
@@ -212,6 +222,7 @@ Print["x-polarized light = ", FullSimplify[Pxdetas[\[Theta],\[Phi],\[Theta]a,\[P
 anixx = Animate[RevolutionPlot3D[Ixrplot[\[Theta],\[Phi],\[Theta]a,\[Pi]/2],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}, AxesLabel ->xyzlabl],{\[Theta]a,0,\[Pi]},AnimationRunning->False]
 Print["z-polarized light = ", FullSimplify[Pzdetas[\[Theta],\[Phi],\[Theta]a,\[Pi]/2], Assumptions->{\[Theta]>0, \[Phi]>0, \[Theta]a>0, \[Phi]a>0}]]
 anixz = Animate[RevolutionPlot3D[Izrplot[\[Theta],\[Phi],\[Theta]a,\[Pi]/2],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}, AxesLabel ->xyzlabl],{\[Theta]a,0,\[Pi]},AnimationRunning->False]
+
 (*Rotations about the y-axis*)
 Print["---------------------------"]
 Print["Rotation about the y-axis"]
@@ -219,6 +230,7 @@ Print["x-polarized light = ", FullSimplify[Pxdetas[\[Theta],\[Phi],\[Theta]a,0],
 aniyx = Animate[RevolutionPlot3D[Ixrplot[\[Theta],\[Phi],\[Theta]a,0],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}, AxesLabel ->xyzlabl],{\[Theta]a,0,\[Pi]},AnimationRunning->False]
 Print["z-polarized light = ", FullSimplify[Pzdetas[\[Theta],\[Phi],\[Theta]a,0], Assumptions->{\[Theta]>0, \[Phi]>0, \[Theta]a>0, \[Phi]a>0}]]
 aniyz = Animate[RevolutionPlot3D[Izrplot[\[Theta],\[Phi],\[Theta]a,0],{\[Theta],0,\[Pi]/2},{\[Phi],0,2*\[Pi]}, AxesLabel ->xyzlabl],{\[Theta]a,0,\[Pi]},AnimationRunning->False]
+
 (*Rotations about the z-axis*)
 Print["---------------------------"]
 Print["Rotation about the z-axis"]
@@ -237,6 +249,7 @@ Print["Differential radiated power full formula"]
 Print["x-polarized light. E^2 * dP/D\[CapitalOmega] = ", Pxdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]
 Print["z-polarized light. E^2 * dP/D\[CapitalOmega] = ", Pzdetas[\[Theta],\[Phi],\[Theta]1,\[Phi]1]]
 (*------------------------------------------*)
+
 (*Total radiated power*)
 Ptotx = Integrate[Integrate[Sin[\[Theta]]*Pxdetas[\[Theta],\[Phi],\[Pi]/2,0],{\[Phi],0,2*\[Pi]},Assumptions->asyassumptions],{\[Theta],0,\[Theta]d},Assumptions->asyassumptions];
 Ptoty = Integrate[Integrate[Sin[\[Theta]]*Pxdetas[\[Theta],\[Phi],\[Pi]/2,\[Pi]/2],{\[Phi],0,2*\[Pi]},Assumptions->asyassumptions],{\[Theta],0,\[Theta]d},Assumptions->asyassumptions];
@@ -247,6 +260,7 @@ Print["x-oriented asymmetry. Px = ",Px = Ptotx/.{\[Theta]d->\[Pi]/2}]
 Print["y-oriented asymmetry. Py = ",Py=Ptoty/.{\[Theta]d->\[Pi]/2}]
 Print["z-oriented asymmetry. Pz = ",Pz=Ptotz/.{\[Theta]d->\[Pi]/2}]
 (*-------------------------------------------*)
+
 (*Total power ratios*)
 Print["-----------------------------------"]
 Print["Ratios of total radiated powers:"]
@@ -254,6 +268,7 @@ Print["Px/Py = ", FullSimplify[Px/Py]]
 Print["Px/Pz = ", FullSimplify[Px/Pz]]
 Print["Py/Pz = ", FullSimplify[Py/Pz]]
 (*--------------------------------------------*)
+
 (*Ration between power in NA=0.4 and total radiated power*)
 Print["-----------------------------------"]
 Print["Ratios of powers with different NA of the hole P*(NA)/P*(NA):"]
