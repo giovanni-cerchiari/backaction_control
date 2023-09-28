@@ -1,3 +1,4 @@
+
 (* ::Package:: *)
 
 (*
@@ -308,3 +309,4 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 
 (* ::InheritFromParent:: *)
 (**)
+

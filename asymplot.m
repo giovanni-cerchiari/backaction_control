@@ -1,20 +1,19 @@
-
 % Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
                         Lorenz Panzl, Thomas Lafenthaler
 %
 % e-mail: giovanni.cerchiari@uibk.ac.at
 % date : 08/2023
-%
+% 
 % This file is a free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation, either version 3 of the License, or
 % at your option) any later version.
-%
+% 
 % This file is distributed in the hope that it will be useful,
 % but WITHOUT ANY WARRANTY; without even the implied warranty of
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
-%
+% 
 % You should have received a copy of the GNU General Public License
 % along with the other repository files.
 % If not, it can be found at <https://www.gnu.org/licenses/>.
@@ -24,20 +23,20 @@
 %
 % This file uses the function "polarPcolor" which was not written
 % by the authors of this file and that it is licenced
-% in a different way. Copy of the licence for this function is included
-% in the folder "ECheynet-polarPcolor-242fc16"
-% The full file can be downloaded from
+% in a different way. Copy of the licence for this function is included 
+% in the folder "ECheynet-polarPcolor-242fc16" 
+% The full file can be downloaded from 
 % https://www.mathworks.com/matlabcentral/fileexchange/49040-pcolor-in-polar-coordinates
 
 % This file was used to generate plots of the signal emerging from an
 % asymmetric spatial distribution of a light scatterer.
-% We assume that light scattering is suppressed via a hemiphserical mirror.
-% We assume a coordinate system
+% We assume that light scattering is suppressed via a hemiphserical mirror. 
+% We assume a coordinate system 
 % (x,y,z) = (cos(theta) cos(phi), sin(theta) sin(phi), cos(theta))
 
 function asymplot()
     % this is the main function of the file
-
+    
     close all
     addpath('.\ECheynet-polarPcolor-242fc16')
     indfigure = 0;
@@ -50,7 +49,7 @@ function asymplot()
     % polarization x-axis, object z-axis
     indfigure = indfigure + 1;
     plotasymmetrysignal(indfigure, pi/2, 0, 0, 0);
-
+    
     % polarization z-axis, object x-axis
     indfigure = indfigure + 1;
     plotasymmetrysignal(indfigure, 0, 0, pi/2, 0);
@@ -65,7 +64,7 @@ end
 
 function plotasymmetrysignal(indfigure, theta_p, phi_p, theta_1, phi_1)
     % this function presents the plot of the radiated power for an
-    % arbitrary orientation of linearly polarized light (theta_p, phi_p)
+    % arbitrary orientation of linearly polarized light (theta_p, phi_p) 
     % and arbitrary orientation of the object's asymmetry (theta_1, phi_1)
     dim = 512;
     % angles on the sphere
@@ -86,7 +85,7 @@ function plotasymmetrysignal(indfigure, theta_p, phi_p, theta_1, phi_1)
     asy = asymmetry(Theta, Phi, Theta1, Phi1);
     % contribution of the polarization
     pol = polarization(Theta, Phi, Thetap, Phip)
-
+    
     figure(indfigure)
     [~,c]=polarPcolor(thetadeg,phideg,pol.*asy);
     ylabel(c,'normalized intensity')
@@ -115,3 +114,5 @@ function scalprod = ntimesm(Thetan, Phin, Thetam, Phim)
     nz = cos(Thetan) .* cos(Thetam);
     scalprod = nx+ny+nz;
 end
+
+
