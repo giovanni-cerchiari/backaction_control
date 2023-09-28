@@ -284,5 +284,3 @@ Print["Py(0.4)/Py(1) = ", FullSimplify[(Ptoty/.{\[Theta]d->ArcSin[0.4]})/(Ptoty/
 Print["Pz(0.4)/Pz(1) = ", FullSimplify[(Ptotz/.{\[Theta]d->ArcSin[0.4]})/(Ptotz/.{\[Theta]d->\[Pi]/2})]]
 
 
-
-

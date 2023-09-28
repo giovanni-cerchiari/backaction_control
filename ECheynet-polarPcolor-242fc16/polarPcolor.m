@@ -180,7 +180,7 @@ end
 % Nested functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     function createSpokes(thetaMin,thetaMax,Ncircles,circlesPos,Nspokes)
-        
+
         spokeMesh = round(linspace(thetaMin,thetaMax,Nspokes));
         if isempty(circlesPos)
             circleMesh = linspace(rMin,rMax,Ncircles);
@@ -188,7 +188,7 @@ end
             circleMesh  =  circlesPos;
         end
         contourD = abs((circleMesh - circleMesh(1))/Rrange+R(1)/Rrange);
-        
+
         if strcmpi(typeRose,'meteo')
             cost = cosd(90-spokeMesh); % the zero angle is aligned with North
             sint = sind(90-spokeMesh); % the zero angle is aligned with North
@@ -198,12 +198,12 @@ end
         else
             error('"type" must be "meteo" or "default" ');
         end
-        
+
         for kk = 1:Nspokes
-            
+
             X = cost(kk)*contourD;
             Y = sint(kk)*contourD;
-            
+
             if  Origin==0
                 X(1)=Origin;
                 Y(1)=Origin;
@@ -214,7 +214,7 @@ end
             % avoid superimposition of 0 and 360
             if and(thetaMin==0,thetaMax == 360),
                 if spokeMesh(kk)<360,
-                    
+
                     text(1.05.*contourD(end).*cost(kk),...
                         1.05.*contourD(end).*sint(kk),...
                         [num2str(spokeMesh(kk),3),char(176)],...
@@ -226,11 +226,11 @@ end
                     [num2str(spokeMesh(kk),3),char(176)],...
                     'horiz', 'center', 'vert', 'middle');
             end
-            
+
         end
     end
     function createCircles(rMin,rMax,thetaMin,thetaMax,Ncircles,circlePos,Nspokes)
-        
+
         if isempty(circlePos)
             if Origin ==0 % if the origin is set at rMin
                 contourD = linspace(0,1+R(1)/Rrange,Ncircles);
@@ -238,12 +238,12 @@ end
                 contourD = linspace(0,1,Ncircles)+R(1)/Rrange;
             end
         else
-            
+
             contourD = circlePos-circlePos(1);
             contourD = contourD./max(contourD)*max(R/Rrange);
             contourD =[contourD(1:end-1)./contourD(end),1]+R(1)/Rrange;
         end
-        
+
         if isempty(circlePos)
             if strcmpi(Rscale,'linear')||strcmpi(Rscale,'lin'),
                 tickMesh = linspace(rMin,rMax,Ncircles);
@@ -256,10 +256,10 @@ end
             tickMesh  = circlePos;
             Ncircles = numel(tickMesh);
         end
-        
+
         % define the grid in polar coordinates
-        
-        
+
+
         if strcmpi(typeRose,'meteo')
             angleGrid = linspace(90-thetaMin,90-thetaMax,100);
         elseif strcmpi(typeRose,'default')
@@ -267,11 +267,11 @@ end
         else
             error('"type" must be "meteo" or "default" ');
         end
-        
+
         xGrid = cosd(angleGrid);
         yGrid = sind(angleGrid);
         spokeMesh = linspace(thetaMin,thetaMax,Nspokes);
-        
+
         % plot circles
         for kk=1:length(contourD)
             X = xGrid*contourD(kk);
@@ -279,21 +279,21 @@ end
             plot(X,Y,'color',[0.5,0.5,0.5],'linewidth',1);
         end
         % radius tick label
-        
+
         position = 0.51.*(spokeMesh(min(Nspokes,round(Ncircles/2)))+...
             spokeMesh(min(Nspokes,1+round(Ncircles/2))));
         if strcmpi(typeRose,'meteo'),position = 90-position; end
         if strcmpi(typeRose,'default') && min(90-theta)<5,position = 0; end
         if min(round(theta))==90 && strcmpi(typeRose,'meteo'),  position = 0; end
         if max(round(theta))==90 && strcmpi(typeRose,'meteo'),  position = 0; end
-        
+
         for kk=1:Ncircles
             if isempty(RtickLabel),
                 rtick = num2str(tickMesh(kk),2);
             else
                 rtick = RtickLabel(kk);
             end
-            
+
             % radial graduations
             t = text(contourD(kk).*cosd(position),...
                 (contourD(kk)).*sind(position),...
@@ -314,7 +314,7 @@ end
                 t.Interpreter = 'latex';
                 clear t;
             end
-            
+
             % annotate spokes
             if max(theta)-min(theta)>180,
                 t = text(contourD(end).*1.3.*cosd(position),...
@@ -329,7 +329,7 @@ end
                     'horizontalAlignment', 'right',...
                     'handlevisibility','off','parent',cax);
             end
-            
+
             t.Interpreter = 'latex';
             if min(round(theta))==90 && strcmpi(typeRose,'meteo'),
                 t.Position =  t.Position + [0,0.05,0];
@@ -344,7 +344,7 @@ end
             %                     clear t;
             %                 end
         end
-        
+
     end
     function [rNorm] = getRnorm(Rscale,Origin,R,Rrange)
         if strcmpi(Rscale,'linear')||strcmpi(Rscale,'lin')

@@ -1,4 +1,3 @@
-
 % Copyright: Copyright: Giovanni Cerchiari, Yannick Weiser, Tommaso Faorlin,
                         Lorenz Panzl, Thomas Lafenthaler
 %
@@ -115,4 +114,5 @@ function scalprod = ntimesm(Thetan, Phin, Thetam, Phim)
     nz = cos(Thetan) .* cos(Thetam);
     scalprod = nx+ny+nz;
 end
+
 
