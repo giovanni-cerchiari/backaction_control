@@ -305,7 +305,17 @@ Plot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], S
 	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
 	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->basupplinestyle, BaseStyle->{FontSize->16},
 	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White]
-
+  
+LogPlot[{Sbarvet[ArcSin[x]][[1]],Sbarvet[ArcSin[x]][[2]],Sbarvet[ArcSin[x]][[3]], Sba[\[Pi]/2,0,0]/Sba[\[Pi]/2,0,0], Sba[\[Pi]/2,\[Pi]/2,0]/Sba[\[Pi]/2,0,0]},{x,0,1},
+	PlotLegend->pltlgdxyz,
+	LegendPosition->{-0.4,-0.2},LegendShadow->None,LegendSize->1,LegendBorder->Black,
+	ImageSize->Large, AxesLabel -> xylabl , Axes -> True, Frame->frameflg, PlotStyle->basupplinestyle, BaseStyle->{FontSize->16},
+	 PlotTheme->"Monochrome", AspectRatio -> 3/4, Background->White, GridLines->Automatic]
+	 
+NA=0.4
+(Sin[NA/2]^4*(100+95*Cos[NA]+36*Cos[2*NA]+9*Cos[3*NA]))/32
+(Sin[NA/2]^4*(140+85*Cos[NA]+12*Cos[2*NA]+3*Cos[3*NA]))/32
+(128-90*Cos[NA]-35*Cos[3*NA]-3*Cos[5*NA])/128
 
 (* ::InheritFromParent:: *)
 (**)
